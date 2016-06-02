@@ -16,13 +16,6 @@ DS | Lesson 2
 - Create, open and create and iPython Notebook
 - Have completed python pre-work
 
-### INSTRUCTOR PREP
-*Before this lesson, instructors will need to:*
-
-- Review [Unit Project 1](../../projects/unit-projects/project-1/readme.md)
-- Copy and modify the [lesson slide deck](./assets/slides/slides-2.md)
-- Add to the "Additional Resources" section for this lesson
-
 
 ### LESSON GUIDE
 | TIMING  | TYPE  | TOPIC  |
@@ -93,9 +86,7 @@ Example aim:
 Determine the association of foods in the home with child dietary intake. Using one 24-hour recall from the cross-sectional NHANES 2007-2010, we will determine the factors associated with food available in the homes of American children and adolescents. We will test if reported availability of fruits, dark green vegetables, low fat milk or sugar-sweetened beverages available in the home increases the likelihood that children and adolescents will meet their USDA recommended dietary intake for that food.
 
 Hypothesis: Children will be more likely to meet their recommended intake level when a food is always available in their home compared to rarely of never.
-> Source: From Dr. Amy Roberts' Dissertation
 
-> Instructor Note: For each of these, give one 1 example and ask the class to id others.  
 
 1. Specific: Using **one 24-hour recall** from the cross-sectional National Health and Nutrition Examination Survey (NHANES) 2007-2010, we will determine the factors associated with food available in the homes of **American children and adolescents**. We will test if **self-reported availability of fruits, dark green vegetables, low fat milk or sugar-sweetened beverages available in the home increases** the likelihood that children and adolescents will meet their **USDA recommended dietary intake** for that food. Our hypothesis is that children will be **more likely to meet their recommended intake level when a food is** _always_ **available in their home** (compared to rarely or never).
     - How data was collected is indicated:
@@ -224,7 +215,6 @@ Before and after you acquire your data, you also want to make sure you understan
 Data dictionaries are often our primary source to help judge the quality of our data and also to understand how it is coded. If our gender variables are coded 0 and 1, how do we know which is male and which is female? Your data dictionary! Is your currency variable coded in dollars or euros? Data dictionary!
 
 ##### Data Dictionary Examples
-> Instructor Note: Here you should show a few examples from Kaggle or your own work (i.e. the basic Titanic example from above or any more elaborate ones).
 
 Data dictionaries are also where you'll identify any requirements, assumptions, and constraints of your data. Note that you should never assume that a pre-existing data dictionary is complete. It is often going to be up to you to test your assumptions and add to your dictionary.
 
@@ -233,7 +223,6 @@ Data dictionaries are also where you'll identify any requirements, assumptions, 
 
 <a name="codealong"></a>
 ## Codealong- Numpy and Pandas intro (30 minutes)
-> Instructor Note: See [NumPy & Pandas notebook](./code/numpy-and-pandas.ipynb)
 
 What is Numpy and Pandas?
 Pandas is built on Python. In Numpy, we use arrays. With arrays you can do:
@@ -245,11 +234,9 @@ Pandas uses data structures that will look more familiar to folks who have used 
 
 Similarly, you can select pieces of data, do basic operations, and calculate summary statistics. Let's see some examples:
 
-> Instructor's Note: View [Examples from the Sample Notebook](./code/numpy-and-pandas.ipynb)
 
 Additionally, we often have to merge data together, correct missing data, and plot our findings. Let's see some examples of each of these:
 
-> Instructor's Note: View [Examples from the Sample Notebook](./code/numpy-and-pandas.ipynb)
 
 **Check:** What is a 'dataframe' and when would you use one?
 
@@ -269,8 +256,6 @@ The purpose of this lab is to get some practice working with Pandas. We will div
 
 <a name="lab"></a>
 ## Lesson 2 Lab (20 min)
-> Instructor Note: Have students walk through each question within the [Lesson 2 Lab](./code/starter-code/starter-code-2.ipynb).
-> Instructor Note: If time, [go over solutions](./code/solution-code/solution-code-2.ipynb)
 
 
 <a name="conclusion"></a>
@@ -279,7 +264,6 @@ The purpose of this lab is to get some practice working with Pandas. We will div
 - Review solutions & questions from lab
 - Review objectives from class
 
-> Instructor Note: Ask students to generate a list of the major takeaways
 
 <a name="wrapup"></a>
 ## Unit 1, project, where we're headed (15 mins)
@@ -296,5 +280,4 @@ The purpose of this lab is to get some practice working with Pandas. We will div
 | **UPCOMING PROJECTS** | [Unit Project 1](../../projects/unit-projects/project-1/readme.md) |
 
 
-### ADDITIONAL RESOURCES
-- If any
+

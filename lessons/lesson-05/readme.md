@@ -1,14 +1,5 @@
----
-title: Flex lab
-duration: "1:45"
-creator:
-    name: Amy Roberts
-    city: NYC
----
-
 # ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Flex lesson
 DS | Lesson 5
-> Instructor Note: Feel free to run this workshop earlier, as needed
 
 ### LEARNING OBJECTIVES
 *After this lesson, you will be able to:*
@@ -62,7 +53,6 @@ Today we are going to review some of the tools we use in data science and see ho
 
 *Command line*- This is your portal to your computer and the outside world.
 
-> Instructor note: Walk through the bottom half of this diagram:
 ![landscape.jpg](./assets/images/landscape.JPG).
 
 ### Local machine
@@ -97,7 +87,6 @@ So far we've been using iPython notebook in place of a text editor. However, the
 
 Let's do a demo of Sublime with python.
 
-> Instructor Note: Pull up the text editor and demo writing a simple python program. You can use [say-hi.py ](./code/say-hi.py).
 
 <a name="intro2"></a>
 ## iPython Notebook
@@ -127,7 +116,6 @@ As we saw with pip, the CL can connect us to the outside world. In data this is 
 
 Let's say we have HIPAA protected data (note: HIPAA is a policy that protects health data for people. It requires extra security so you can't leave data around on your local computer.) Often times it will be the data we'll leave on an external computer that we need to communicate with. We can do this through the CL.
 
-> Instructor Note: Demo SSH and/or Tunnel to a AWS or similar instance
 
 Ok! so we've see a few of the ways that we can use terminal to enable our data analysis and help make it more powerful.
 
@@ -140,7 +128,6 @@ Git is a way of tracking changes we've made to our programs and go back in time 
 
 Let's see it in action. As I'm sure you've guessed, a common way to do this is through CL! You can also use the github GUI.
 
-> Instructor Note: Demo making a small change to [say-hi.py](./code/say-hi.py) (e.g. change howdy to hello). Save it.
 
 ```
 git add
@@ -150,7 +137,6 @@ git push
 
 When a colleague wants to implement our change, they can use a command called `git pull`.
 
-> Instructor Note: _Draw this new connection on the board._
 
 Ok! That was a lot of material. Let's review.
 
@@ -169,7 +155,6 @@ Ok! That was a lot of material. Let's review.
 
 <a name="#lab1"></a>
 ## Independent Practice- GIT and Command Line (50 min)
-> Instructor Note - Review any of the following exercises from the course pre-work
 - "Codecademy" Python module
 - GA Command Line
 
@@ -186,7 +171,6 @@ How proficient are you with statistical odds? Let's review some quick basics abo
 
 <a name="guided-practice"></a>
 ## Guided Practice- Odds and Probability (20 min)
-> Instructor Note: Walk through [starter code](./code/starter-code/starter-code-5.ipynb) with students.
 
 
 <a name="wrapup"></a>
@@ -204,5 +188,3 @@ How proficient are you with statistical odds? Let's review some quick basics abo
 |---|---|
 | **PROJECT**  |  TBA |
 
-### ADDITIONAL RESOURCES
-- If any

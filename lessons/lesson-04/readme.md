@@ -1,11 +1,3 @@
----
-title: Statistics Fundamentals
-duration: "1:45"
-creator:
-    name: Amy Roberts
-    city: NYC
----
-
 # ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Statistics Review
 DS | Lesson 4
 
@@ -21,14 +13,6 @@ DS | Lesson 4
 
 - Explain the difference between variance and bias  
 - Use descriptive stats to understand your data
-
-### INSTRUCTOR PREP
-*Before this lesson, instructors will need to:*
-
-- Review [Unit Project 2](../../projects/unit-projects/project-2/readme.md)
-- Copy and modify the [lesson slide deck](./assets/slides/slides-4.md)
-- Read through datasets and starter / solution code
-- Add to the "Additional Resources" section for this lesson
 
 ### LESSON GUIDE
 
@@ -49,7 +33,7 @@ DS | Lesson 4
 ---
 <a name="opening"></a>
 ## Opening (5 min)
-- Review any questions from last session
+session
 - Discuss Current Lesson Objectives
 - Review prior exit tickets
 
@@ -57,7 +41,6 @@ DS | Lesson 4
 Today we will use advertising data from an example in
 [An Introduction to Statistical Learning by Gareth James](http://www-bcf.usc.edu/~gareth/ISL/Advertising.csv).
 
-> Instructor Note: This is used in the demo and can be downloaded directly from the website by running that specific cell of [demo-starter notebook](./code/starter-code/demo-starter-code-4.ipynb). No other files are needed.  
 
 
 <a name="introduction"></a>
@@ -139,16 +122,13 @@ What other factors may increase sales? What other types of ads? Creating a DAG m
 ### Think, Pair, Share
 Let's say we want to evaluate which type of ad is associated with higher sales.
 
-> Instructor Note: Have students draw a basic DAG on their table or board. Take 2 mins and think about other variables that may predict sales. Discuss in small groups and share one or two examples with the class.
 
-> Instructor Note: Be alert for an example of seasonality (or something similar). Use this a jumping off point to connect to confounding.
 
 Great- let's take a look at the association between TV Ads and Sales by taking into account *seasonality*.
 
 On a DAG this would look something like a triangle between:  
 `TV--> Sales and seasonality --> TV Ads and seasonality --> Sales`
 
-> Instructor Note: Repeat with a 2nd DAG swapping out TV ads with Google ads.
 
 Let's assume that the TV ads were run in November/December (right before holiday gift season) while the Google ads were run during February & March (when sales are historically low).
 
@@ -194,9 +174,7 @@ Let's dive into this more with the demo.
 
 <a name="demo"></a>
 ## Demo: Hypothesis Testing Case Study (30 mins)
-> Instructor Note: Walk through the demo with students. Throughout the demo there are certain sections marked student questions. Give  students time to answer these questions individually or as a small group (2 min or so per question), then share with the class and discuss before moving on to the next question.
 
-> Instructor Note: Have students open the [guided demo starter code](./code/starter-code/demo-starter-code-4.ipynb) and move through Part 1. Answers can be found in the [demo solution code](./code/solution-code/demo-solution-code-4.ipynb).
 
 
 **Check:** What is the null hypothesis? Why is this important to use?
@@ -216,11 +194,9 @@ When data scientists present results and say we found a significant result- it i
 <a name="demo2"></a>
 ## Demo: P-values & CI in the case study (20 mins)
 
-> Instructor Note: Have students open the [guided demo starter code](./code/starter-code/demo-starter-code-4.ipynb) and move through Part 2. Answers can be found in the [demo solution code](./code/solution-code/demo-solution-code-4.ipynb).
 
 **Check:** What does a 95% confidence interval indicate?
 
-> Answer: If we repeated our analysis 100 times, the point estimate we found would be there 95% of the time.
 
 
 <a name="independent-practice"></a>
@@ -233,13 +209,11 @@ For this lab you will be asked to read these outputs and tables and determine if
 
 You will also get practice looking at the output and understanding how the model was built (e.g. identifying predictor/exposure vs outcome).
 
-> Instructor Note: Have students open and work through the [lab starter code](./code/starter-code/lab-starter-code-4.ipynb).
 
 
 <a name="wrapup"></a>
 ## Conclusion: Questions (15 mins)
 
-> Instructor Note: Go over the [lab solutions](./code/solution-code/lab-solution-code-4.ipynb) with the class and clarify any confusing points or remaining questions.
 
 Any questions?
 
@@ -250,5 +224,3 @@ Any questions?
 |---|---|
 | **UPCOMING PROJECTS**  | [Unit Project 2](../../projects/unit-projects/project-2/readme.md)  |
 
-### ADDITIONAL RESOURCES
-- If any

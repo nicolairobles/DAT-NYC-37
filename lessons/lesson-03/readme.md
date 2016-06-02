@@ -1,11 +1,3 @@
----
-title: Statistics Fundamentals
-duration: "1:45"
-creator:
-    name: Amy Roberts
-    city: NYC
----
-
 # ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Statistics Fundamentals
 DS | Lesson 3
 
@@ -23,14 +15,6 @@ DS | Lesson 3
 
 - Create and open an iPython Notebook
 - Have completed all of the python pre-work
-
-### INSTRUCTOR PREP
-*Before this lesson, instructors will need to:*
-
-- Review [project feedback guidelines](../../projects/project-feedback.md)
-- Copy and modify the [lesson slide deck](./assets/slides/slides-3.md)
-- Read through datasets and starter/solution code
-- Add to the "Additional Resources" section for this lesson
 
 ### LESSON GUIDE
 | TIMING  | TYPE  | TOPIC  |
@@ -51,7 +35,6 @@ DS | Lesson 3
 <a name="opening"></a>
 ## Opening (5 min)
 
-> Instructor Note: Review Prior Lesson Content & Exit Tickets. Discuss Current Objectives.
 
 <a name="introduction"></a>
 ## Intro: Laying the ground work (20 mins)
@@ -70,7 +53,6 @@ Define:
 10. Correlation
 
 ### Mean
-> Source: Content for mean, median and mode sourced from www.yti.edu/lrc/images/math_averages.doc.
 
 The mean of a set of values is the sum of the values divided by the number of values.  It is also called the average.
 
@@ -162,10 +144,8 @@ A.  For the following groups of numbers, calculate the mean, median and mode by 
 <a name="#codealong1"></a>
 ## Codealong: Summary statistics in Pandas (30 min)
 
-> Instructor Note: Have students open the [starter-code](./code/starter-code/starter-code-3.ipynb). Solutions are available in [the solution-code](./code/solution-code/solution-code-3.ipynb).
 
 ### Codealong Part 1: Basic Stats-
-> Instructor Note: Review "Part 1. Basic Stats" of the [starter-code](./code/starter-code/starter-code-3.ipynb).
 
 We will begin by using pandas to calculate the same Mean, Median, Mode, Max, Min from above.
 
@@ -182,7 +162,6 @@ We will begin by using pandas to calculate the same Mean, Median, Mode, Max, Min
 Quartiles divide a rank-ordered data set into four equal parts. The values that divide each part are called the first, second, and third quartiles; and they are denoted by Q1, Q2, and Q3, respectively. The interquartile range (IQR) is a measure of variability, based on dividing a data set into quartiles. Let's take a look in the notebook.
 
 ### Codealong Part 2: Box Plot
-> Instructor Note: Review "Part 2. Box Plot" of the [starter-code](./code/starter-code/starter-code-3.ipynb).
 
 The box plot is a handy graph that gives us a nice visual of these metrics, as well as the quartile and the interquartile range.
 
@@ -205,7 +184,6 @@ The regression line is the line that minimizes the sum of squared deviations of 
 
 
 ### Codealong Part 3: Standard Deviation & Variance
-> Instructor Note: Review "Part 3. SD & Variance" of the [starter-code](./code/starter-code/starter-code-3.ipynb).
 
 To calculate the variance and SD in pandas.
 
@@ -248,13 +226,11 @@ Kurtosis is a measure of whether the data are peaked or flat relative to a norma
 
 <a name="demo"></a>
 ## Demo: Determining the distribution of your data (15 mins)
-> Instructor Note: Use the [lesson-3-demo](./code/lesson-3-demo.ipynb) for this section. Walk through each section of the notebook in order.
 
 
 <a name="guidedpractice2"></a>
 ## Guided Practice: Is this skewed? (10 mins)
 
-> Instructor Note: Walk through images of normal, skewed, sigmoid (etc) distributions. Stand up and vote on the types. After each image, discuss methods of correcting the issue. Use your own work or review [the sample images from the asset folder](./assets/images/).
 
 For example:
 
@@ -283,7 +259,6 @@ Let's say we have a categorical variable called "area". It is saved in our datas
 
 We have to represent categorical variables numerically, but we can't simply code it `0=rural, 1=suburban, 2=urban` because that would imply an **ordered relationship** between suburban and urban. Is urban somehow "twice" the suburban category? Since an ordered relationship wouldn't make sense, we'll do this by converting our 1 location variable into two new variables: `area_urban` and `area_suburban.`
 
-> Instructor note: Draw this on the board
 
 Using the example above, let's draw out how these variables can be represented mathematically without implying an order. We can do this with 0s and 1s.
 
@@ -321,11 +296,9 @@ We can do this in pandas with the "get_dummies" method. Let's check it out in pr
 
 It's important to understand the concept before we use `get_dummies` so today we'll create dummy variables by hand. In future classes, we'll use `get_dummies` to create these.  In fact, we'll be using dummy variables in almost every analysis you complete because it is very rare to have continuous variables.
 
-> Instructor Note: Have each student draw a table (like we did above) on the white board or table.
 
 Create dummy variables for the variable "colors" that has 6 categories: blue, red, green, purple, grey, brown. Set grey as the reference. 
 
-> Answer:
 	| color_blue | color_red | color_green | color_purple | color_brown
 --- | --- | --- | --- | --- | ---
 blue | 1 | 0 | 0 | 0 | 0
@@ -339,15 +312,10 @@ brown | 0 | 0 | 0 | 0 | 1
 <a name="conclusion"></a>
 ## Conclusion (10 mins)
 
-> - Review questions from dummy practice
-> - Review objectives from class
 
 <a name="wrapup"></a>
 ## Project questions and Next Project (15 mins)
 
-> - Review [Project 1](../../projects/unit-projects/project-1/readme.md)
-> - Introduce the next project
-> - Exit tickets
 
 ***
 
@@ -357,4 +325,4 @@ brown | 0 | 0 | 0 | 0 | 1
 | **PROJECT 2** | [Unit Project 2](../../projects/unit-projects/project-2/readme.md)   |
 
 ### ADDITIONAL RESOURCES
-- If any
+
