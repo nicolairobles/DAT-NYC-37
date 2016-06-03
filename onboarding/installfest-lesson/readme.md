@@ -218,8 +218,6 @@ Test that this works by typing `psql`. You should be presented with the postgres
 
 A data scientist frequently writes scripts to process data, perform analysis, and create visualizations, webpages, and other end products, so you'll need a good text editor. If you don't already have a preference, try [Atom](https://atom.io/) or [Sublime](http://www.sublimetext.com/). Both editors are available for most platforms.
 
-> Instructors should modify these options based on their preferences.
-
 1. Download the editor of your choice from their website.
 2. Install the package by double clicking the file icon or from the command line
 3. Run your editor from the applications menu, or from the command line, like so:
