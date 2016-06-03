@@ -107,7 +107,7 @@ In fact, people who carry cigarette lighters are 2.4 times as likely to contract
 
 **Check:** What factor(s) are missing from this model? How might we measure for these?
 
-A *DAG- Directed Acyclic Diagram* is a handy tool to help you determine which variables are most important for your model.
+A *DAG- Directed Acyclic Graph* is a handy tool to help you determine which variables are most important for your model.
 
 A DAG always includes at least one exposure/predictor and one outcome. For example:
 
