@@ -1,5 +1,6 @@
 */**/python-checkpoint.ipynb
 */**/ipynb-checkpoints/*.ipynb
+.ipynb_checkpoints
 scratch/*
 scripts/*
 projects/project-feedback.md
