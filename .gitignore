@@ -4,4 +4,4 @@
 scratch/*
 scripts/*
 projects/project-feedback.md
-projects/**/*-solutions.ipynb
+lessons/**/*solution*.ipynb

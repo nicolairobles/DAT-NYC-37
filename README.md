@@ -5,7 +5,7 @@ Course materials for [General Assembly's Data Science course](https://generalass
 
 ## Exit Ticket
 
-[Fill me out at the end of each class!](http://tiny.cc/ds-sf-23)
+[Fill me out at the end of each class!](https://docs.google.com/forms/d/1HM-kP6zUBUpz2H1D6Ij-yCIaBPG0H09hv5VNseiHVyw/viewform?c=0&w=1)
 
 ## Schedule
 
@@ -15,13 +15,13 @@ Course materials for [General Assembly's Data Science course](https://generalass
 | | | **Unit 1 - Research Design and Exploratory Data Analysis** |
 | 1 | 6/1 | [What is Data Science](./classes/01) | |
 | 1 | 6/6 | [Research Design and _pandas_](./classes/02) | |
-| 2 | 6/8 | [Descriptive Statistics for Exploratory Data Analysis](./classes/03) | **[Unit Project 1](./unit-projects/1) due** |
-| 2 | 6/13 | [Flexible Class Session: Exploratory Data Analysis](./classes/04) | |
-| 3 | 6/15 | [Inferential Statistics for Model Fit](./classes/05) | **[Unit Project 2](./unit-projects/2) due** |
+| 2 | 6/8 | [Descriptive Statistics for Exploratory Data Analysis](./classes/03) | |
+| 2 | 6/13 | [Flexible Class Session: Exploratory Data Analysis](./classes/04) | **[Unit Project 1](./unit-projects/1) due** |
+| 3 | 6/15 | [Inferential Statistics for Model Fit](./classes/05) | |
 | | | **Unit 2 - Foundations of Data Modeling** | |
-| 3 | 6/20 | [Introduction to Regression and Model Fit](./classes/06) | **[Final Project 1](./final-project/1) due** |
-| 4 | 6/22 | [Introduction to Regression and Model Fit, Part 2](./classes/07) | |
-| 4 | 6/27 | [Introduction to Classification](./classes/08) | |
+| 3 | 6/20 | [Introduction to Regression and Model Fit](./classes/06) | **[Unit Project 2](./unit-projects/2) due** |
+| 4 | 6/22 | [Introduction to Regression and Model Fit, Part 2](./classes/07) | **[Final Project 1](./final-project/1) due** |
+| 4 | 6/27 | [Introduction to Classification](./classes/08) |  |
 | 5 | 6/29 | Introduction to Logistic Regression | **[Final Project 2](./final-project/2) due** |
 | 5 | 7/6 | Advanced Metrics and Communicating Results | **[Unit Project 3](./unit-projects/3) due** |
 | 6 | 7/11 | Flexible Class Session | |
@@ -36,13 +36,13 @@ Course materials for [General Assembly's Data Science course](https://generalass
 | 10 | 8/8 | Final Project Presentations | **[Final Project 5](./final-project/5) due** |
 | 10 | 8/10 | Final Project Presentations, Part 2 | |
 
-(Syllabus last updated on 6/1/2016)
+(Syllabus last updated on 6/5/2016)
 
 (Flexible class sessions will be finalized after student goals are defined)
 
 ## Your Team
 
-**Instructor:** [Anthony Erlinger](mailto:aerlinger@.com)
+**Instructor:** [Anthony Erlinger](mailto:aerlinger@gmail.com)
 
 **Expert-in-Residence:** [Zunayed Ali Morsalin](mailto:zunayed@gmail.com)
 
