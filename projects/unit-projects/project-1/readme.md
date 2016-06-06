@@ -16,11 +16,11 @@ Welcome to Data Science! In this first project you will create a framework to sc
 #### Completed iPython Notebook
 
 - **Requirements:**
-    - Identify features of the dataset, including the outcome and covariates/predictors
-    - Create a data dictionary with classification of available variables
-    - Write a high quality problem statement
-    - State the risks and assumptions of your data
-    - Outline exploratory analysis methods
+    1. Identify features of the dataset, including the outcome and covariates/predictors
+    2. Create a data dictionary with classification of available variables
+    3. Write a high quality problem statement
+    4. State the risks and assumptions of your data
+    5. Outline exploratory analysis methods
 
 - **Bonus:**
     - Practice writing an alternative problem statement for your dataset
@@ -63,7 +63,7 @@ While your total score is a helpful gauge of whether you've met overall project 
 ### RESOURCES
 
 #### Dataset  
-We'll be using the same dataset as UCLA's Logistic Regression in R tutorial to explore logistic regression in Python, as explained in [yhat's blog](http://blog.yhat.com/posts/logistic-regression-and-python.html). This is an excellent resource for using logistic regression and summary statistics to explore a relevant dataset. Our goal will be to identify the various factors that may influence admission into graduate school. It contains four variables- admit, gre, gpa, rank.
+We'll be using the same dataset as UCLA's Logistic Regression in R tutorial to explore logistic regression in Python, as explained in [yhat's blog](http://blog.yhat.com/posts/logistic-regression-and-python.html). This is an excellent resource for using logistic regression and summary statistics to explore a relevant dataset. __Our goal will be to identify the various factors that may influence admission into graduate school.__ It contains four variables- admit, gre, gpa, rank.
 
 - 'admit' is a binary variable. It indicates whether or not a candidate was admitted admit =1) our not (admit= 0)
 - 'gre' is GRE score
