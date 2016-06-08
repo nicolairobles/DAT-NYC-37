@@ -319,10 +319,10 @@ brown | 0 | 0 | 0 | 0 | 1
 
 ***
 
-### BEFORE NEXT CLASS
+### NEXT CLASS
 |   |   |
 |---|---|
-| **PROJECT 2** | [Unit Project 2](../../projects/unit-projects/project-2/readme.md)   |
+| **PROJECT 1 DUE** | [Unit Project 1](../../projects/unit-projects/project-1/readme.md)   |
 
 ### ADDITIONAL RESOURCES
 
