@@ -3,6 +3,10 @@
 
 Course materials for [General Assembly's Data Science course](https://generalassemb.ly/education/data-science/new-york) in New York (6/1/16 - 8/15/16)
 
+## Project folder
+
+The repository to upload projects can be found here: https://github.com/ga-students/DAT-NYC-37-Students
+
 ## Exit Ticket
 
 [Fill me out at the end of each class!](https://docs.google.com/forms/d/1HM-kP6zUBUpz2H1D6Ij-yCIaBPG0H09hv5VNseiHVyw/viewform?c=0&w=1)
