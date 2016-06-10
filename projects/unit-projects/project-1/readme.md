@@ -13,7 +13,7 @@ Welcome to Data Science! In this first project you will create a framework to sc
 
 ### DELIVERABLES
 
-#### Completed iPython Notebook
+#### 1. Completed iPython Notebook
 
 **Tip: Copy and fill-in answers within the starter notebook (https://github.com/ga-students/DAT-NYC-37/blob/master/projects/unit-projects/project-1/starter-code/project1-starter.ipynb)**
 
@@ -30,6 +30,10 @@ Welcome to Data Science! In this first project you will create a framework to sc
 
 - **Submission:**
     - Due Midnight 6/13 in the DAT-NYC-37-Students Repository 
+
+#### 2. Completed Lesson 3 Lab:
+
+Submit a completed copy of the in-class lab for lesson 3: https://github.com/ga-students/DAT-NYC-37/blob/master/lessons/lesson-03/code/lesson-3-lab.ipynb
 
 ---
 
