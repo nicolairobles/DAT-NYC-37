@@ -1,5 +1,4 @@
 # ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Project #3: Modeling Assignment
-DS | Unit Project 3
 
 ### PROMPT
 
@@ -22,7 +21,7 @@ In this project, you will perform a logistic regression on the admissions data w
     - Brainstorm ways to improve your analysis
 
 - **Submission:**
-    - TBD 
+    - See timeline in [class README](../../../README.md)
 
 ---
 
