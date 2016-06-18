@@ -1,12 +1,3 @@
----
-title: Evaluating Model Fit
-duration: 3:00
-creator:
-    name: Ed Podojil
-    city: NYC
-    dataset: citibike ridership and weather data
----
-
 # ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Evaluating Model Fit
 DS | Lesson 7
 
@@ -25,30 +16,6 @@ DS | Lesson 7
 - Recall what a _residual_ is
 - Implement an sklearn estimator to predict a target variable
 
-### INSTRUCTOR PREP
-*Before this lesson, instructors will have to:*
-
-- Review [Unit Project 3](../../projects/unit-projects/project-3/readme.md)
-- Copy and modify the [lesson slide deck](./assets/slides/slides-7.md)
-- Read through datasets and starter/solution code
-- Add to the "Additional Resources" section for this lesson
-
-### LESSON GUIDE
-| TIMING  | TYPE  | TOPIC  |
-|:-:|---|---|
-| 5 min  | [Opening](#opening)  | Discuss lesson objectives  |
-| 10-15 mins  | [Introduction](#introduction-cv)  | Reviewing concepts of error for regression models and cross validation |
-| 10-15 mins  | [Demo](#demo-cv)  | demo using cross validation |
-| 20-25 mins  | [Guided Practice](#guided-practice-cv)  | Cross validation in sklearn  |
-| 10-15 mins  | [Introduction](#introduction-reg)   | What are Lasso and Ridge doing differently? |
-| 10-15 mins  | [Demo](#demo-reg)  | Zeroing coefficients using alpha |
-| 20-25 mins  | [Guided Practice](#guided-practice-reg)  | Solving for alpha using a grid search  |
-| 10-15 mins  | [Introduction](#introduction-sgd)  | Using Gradient Descent to minimize error |
-| 10-15 mins  | [Demo](#demo-sgd)  | Application of Stochastic Gradient Descent |
-| 30-35 mins  | [Independent Practice](#ind-practice)  | Create an improved model of bikeshare rider data  |
-| 5-10 mins  | [Conclusion](#conclusion)  | Review topics |
-
----
 
 <a name="opening"></a>
 ## Opening (5 mins)
@@ -494,7 +461,3 @@ print gs.grid_scores_
 |---|---|
 | **UPCOMING PROJECTS**  |[Final Project, Deliverable 1](../../projects/final-projects/01-lightning-talk/readme.md)  |
 
-### ADDITIONAL RESOURCES
-- Add your own resources.
-- Go crazy.
-- So much room for bullets!
