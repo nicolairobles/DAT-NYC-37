@@ -1,15 +1,4 @@
----
-title: Intro to Regression Analysis
-duration: "02:50"
-creator:
-    name: Ed Podojil
-    city: NYC
-    dataset: animal weights and sleeping habit
-    dataset: citibike ridership and weather data
----
-
 # ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Intro to Regression Analysis
-DS | Lesson 6
 
 ### LEARNING OBJECTIVES
 *After this lesson, you will be able to:*
@@ -27,13 +16,6 @@ DS | Lesson 6
 - Understand the concepts of outliers and distance.
 - Be able to interpret p values and confidence intervals
 
-### INSTRUCTOR PREP
-*Before this lesson, instructors will need to:*
-
-- Review [Final Project pt 1](../../projects/final-projects/01-lightning-talk/readme.md)
-- Copy and modify the [lesson slide deck](./assets/slides/slides-6.md)
-- Read through datasets and starter/solution code
-- Add to the "Additional Resources" section for this lesson
 
 ### LESSON GUIDE
 | TIMING  | TYPE  | TOPIC  |
@@ -526,7 +508,3 @@ If your model at least improves upon the original model and the explanatory effe
 |---|---|
 | **UPCOMING PROJECTS**  | [Final Project, Deliverable 1](/projects/final-projects/01-lightning-talk/readme.md)  |
 
-### ADDITIONAL RESOURCES
-- Add your own resources.
-- Go crazy.
-- So much room for bullets!

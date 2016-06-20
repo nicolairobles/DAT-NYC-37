@@ -1,5 +1,4 @@
 # ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Project #2: Exploratory Analysis
-DS | Unit Project 2
 
 ### PROMPT
 
@@ -39,7 +38,7 @@ Following these steps will help you better understand your dataset.
 
 | Deadline | Deliverable| Description |
 |:-:|---|---|
-| Lesson 5 | Project 2  | Exploratory Data Analysis   |
+| Lesson 6 | Project 2  | Exploratory Data Analysis   |
 
 ---
 
