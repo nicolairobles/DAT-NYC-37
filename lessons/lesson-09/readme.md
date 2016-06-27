@@ -1,259 +1,281 @@
 ---
-title: Logistic Regression
-duration: 3:00
+title: Introduction to Classification
+duration: 2:30
 creator:
     name: Ed Podojil
     city: NYC
-    dataset: college admissions
+    dataset: iris dataset
 ---
 
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Introduction to Logistic Regression
-DS | Lesson 9
+# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Introduction to Classification
+DS | Lesson 8
 
 ### LEARNING OBJECTIVES
 *After this lesson, you will be able to:*
-- Build a Logistic regression classification model using the sci-kit learn library
-- Describe the sigmoid function, odds, and odds ratios as well as how they relate to logistic regression
-- Evaluate a model using metrics, such as: classification accuracy/error, confusion matrix, ROC / AOC curves, and loss functions
+
+- Define class label and classification
+- Build a K-Nearest Neighbors using the sci-kit-learn library
+- Evaluate and tune model by using metrics such as classification accuracy/error
 
 ### STUDENT PRE-WORK
 *Before this lesson, you should already be able to:*
-- Implement a linear model (LinearRegression) with sklearn
-- Define the concept of coefficients
-- Recall metrics for accuracy and misclassification
-- Recall the differences between L1 and L2 regularization
+
+- Understand how to optimize for error in a model
+- Understand the concept of iteration to solve problems
+- Measure basic probability
 
 ### INSTRUCTOR PREP
 *Before this lesson, instructors will have to:*
 
-- Review [Unit Project 4](../../projects/unit-projects/project-4/readme.md)
-- Copy and modify the [lesson slide deck](./assets/slides/slides-9.md)
+- Review [Final Project, pt 2](../../projects/final-projects/02-experiment-writeup/readme.md)
+- Copy and modify the [lesson slide deck](./assets/slides/slides-8.md)
 - Read through datasets and starter/solution code
 - Add to the "Additional Resources" section for this lesson
 
 ### LESSON GUIDE
 | TIMING  | TYPE  | TOPIC  |
 |:-:|---|---|
-| 5 min  | [Opening](#opening) | Discuss lesson objectives, Reviewing Probability |
-| 20-25 mins | [Introduction](#intro-logit) | Intro to Logistic Regression |
-| 10-15 mins | [Demo](#demo-logit)  | Demo of the Sigmoid Function |
-| 10-15 mins | [Guided Practice](#guided-practice-logit)  | Calculating Probabilities given Odds using Sigmoid |
-| 15-20 mins | [Independent Practice](#ind-practice-logit) | Implementing and Practicing Logistic Regression in Sklearn |
-| 20-25 mins | [Introduction](#intro-eval) | Intro to additional classification metrics and the confusion matrix |
-| 10-15 mins | [Guided Practice](#guided-practice-eval) | Determining proper metrics given classification problems |
-| 30-35 mins | [Independent Practice](#ind-practice-eval)  | Optimizing a logistic regression using new metrics  |
-| 5-10 mins | [Conclusion](#conclusion) | Review |
+| 5 min  | [Opening](#opening)  | Discuss lesson objectives  |
+| 10-15 mins  | [Introduction](#introduction-class) | What is Classification? |
+| 20 mins  | [Guided Practice](#guided-practice-class) | Regression vs Classification |
+| 20 mins  | [Independent Practice](#ind-practice-class)  | Build a Classifier |
+| 10-15 mins  | [Introduction](#introduction-knn)  | Introduction to K Nearest Neighbors |
+| 10-15 mins  | [Demo](#demo-knn)  | Demo of KNN |
+| 10-15 mins  | [Introduction](#introduction-eval)   | First Classification Metrics |
+| 30-35 mins  | [Independent Practice](#ind-practice-knn)  | Solving for K |
+| 5-10 mins  | [Conclusion](#conclusion)  | Review topics |
+
+---
 
 <a name="opening"></a>
-## Opening (5 minutes)
+## Opening (5 mins)
 
-Read through the following questions and brainstorm answers for each:
+In class so far, we've primarily worked with regression problems: machine learning approaches to solving or predicting a continuous set of values. Since regressions are continuous (for example, 1 is greater than 0, and 100 is greater than 1), we've been able to use distance to measure how accurate our prediction is.
 
-1. In class, we've covered two different types of algorithms so far: the *linear model* (ordinary least squares, OLS) and *k-nearest neighbors* (KNN). What are the main differences between these two? What is different about how they approach solving the problem?
-    - For example, what is _interpretable_ about OLS compared to what's _interpretable_ in KNN?
+While predicting something like the cost of a house or the number of clicks on an ad, we use ranges to sort our values. But other problems, like whether a loan is going to default or not, don't make sense within those parameters. A loan is either going to default, or it's not. We call these binary problems.
 
-    > A: OLS is used to solve a continuous regression problem, while KNN is used to solve a categorical problem.
+**Check:** What if we want to build a model to predict set values, like an social media status or photo color? How about the gender of a baby? Do we use regression problems or binary values? Do the same principles apply?
 
-2. What would be the advantage of using a linear model like OLS to solve a classification problem, compared to KNN?
-    - What are some challenges for using OLS to solve a classification problem (say, if the values were either 1 or 0)?
+---
 
-<a name="intro-logit"></a>
-## Introduction to Logistic Regression
+<a name="introduction-class"></a>
+## Introduction: What is Classification (5 mins)
 
-Logistic Regression is a _linear_ approach to solving a classification problem. That is, we can use a linear model, similar to Linear Regression, in order so solve if an item _belongs or does not belong_ to a class label.
+**Classification** is a machine learning problem for solving a set value given the knowledge we have about that value.
 
-### Challenge! Linear Regression Results for Classification
+Many classification problems boil down to a *binary* problem. For example, with patient data, one could be working on solving a treatment problem for smokers... but first we need to know if their medical history suggests, or is predictive, of whether the patient is a smoker or not.
 
-Regression results, as defined, can have a value ranging from negative infinity to infinity. However, not all regression problems will use that entire range. For example, imagine predicting a football player's salary: it wouldn't be negative, and while it would be high, there is an eventual cap.
+Many problems don't appear to be binary at first glance, but with a limited set of variables, you can usually boil your model down to a *boolean* value. For instance, what if you are predicting whether an image pixel will be red or blue? In analyzing the image, we could check whether a pixel "is red" or "is not red."
 
-Classification is used when the predicted values (class labels) are not necessarily greater or less than each other. Logically this makes sense, but since most classification problems are binary (0 or 1), and 1 is technically greater than 0... wouldn't it make sense to apply the concept of a regression to solve classification? How could we contain those bounds?
+Binary classification is the simplest form of classification, though classification problems can certainly be wrapped around multiple _class labels_.
 
-Below, we'll review some approaches to regression that will show us how to apply it to classification problems.
+### What is a class label?
 
-### Fix 1: Probability
+A class label is a representation of what we are trying to predict: our target. The examples of class labels from above would be:
 
-One approach is to predict the probability that an observation belongs to a certain class. We could assume that the _prior_ probability (or the _bias_) of a class is the class distribution.
+Data Problem | Class Labels
+-------------|--------------
+Patient data problem | is smoker, is not smoker
+pixel color | red, blue (etc)
 
-For example, if we know that roughly 700 people from the Titanic survived out of 2200 total, then without knowing anything about the passengers and crew, the probability of survival would be ~0.32 (32%). However, we still need a way to use a linear function to either increase or decrease the probability of an individual, given any additional data we know about them.
+The easiest way to understand if our `y`, the dependent variable, is a classification problem or not, is to see if the values can be ordered given math.
 
-**Check**: This prior probability is most similar to which value in the ordinary least squares formula?
+For example, if predicting revenue, $100MM is greater than $90MM (and more so, could be negative!), so revenue prediction sounds like a _regression_ problem. Red is not inherently greater than or less than blue, therefore predicting this pixel is a _classification_ problem, with "red" and "blue" as the class labels.
 
-> Answer: Alpha, or the y-intercept
+<a name="guided-practice-class"></a>
+## Guided Practice: Regression or Classification? (20 mins)
 
-### Fix 2: Link Functions and the Sigmoid Function
+Review the following situations and decide if each one is a regression problem, classification problem, or neither:
 
-![logistic fit vs linear regression fit](./assets/images/log_vs_ols.jpg)
+1. Using the total number of explosions in a movie, predict if the movie is by JJ Abrams or Michael Bay.
+2. Determine how many tickets will be sold to a concert given who is performing, where, and the date and time.
+3. Given the temperature over the last year by day, predict tomorrow's temperature outside.
+4. Using data from four cell phone microphones, reduce the noisy sounds so the voice is crystal clear to the receiving phone.
+5. With customer data, determine if a user will return or not in the next 7 days to an e-commerce website.
 
-Another advantage to Ordinary Least Squares is that it allows for _generalized_ models using a _link_ function. Link functions allow us to build a relationship between a linear function and the mean of a distribution.
+**Note:** The primary difference between regression and classification is the _result_; the data used as input should resonate with what we've used in the past. In fact, writing a classifier could look a lot like control flow, a common pattern in coding.
 
-**Check**: What was the distribution most aligned with OLS/Linear Regression?
+<a name="independent-practice-class"></a>
+## Independent Practice: Build a classifier! (20 mins)
 
-> Answer: The Normal Distribution
+With our new knowledge about class labels and classification, it should be relatively straightforward to write a computer program that returns class labels based on some prior knowledge.
 
-For classification, we need a distribution associated for categories: the probability of a given event, given all events. The link function that best allows for this is the _logit_ function, which is the inverse of the _sigmoid_ function.
+Our goal below is to (re) explore the iris dataset, which has 50 samples of 3 different class labels, and see if we can write a program that classifies the data. We can do this very easily with python if-else statements and some pandas functions.
 
-We'll start with sigmoid function. A _sigmoid function_, quite simply, is a function that visually looks like an s. While it serves many purposes, a sigmoid function is useful in logistic regression.
+Afterward, measure the _accuracy_ of your classifier using the math of "total correct" over "total samples."
 
-Our sigmoid function is defined mathematically as:
+Your classifier should be able to:
 
-`1 / 1 + e^-t`
+1. Get one class label 100% correct: one of the irises is very easy to distinguish from the other 2.
+2. Accurately predict the majority of the other two, with some error.
+    - Note: the samples for the remaining class labels are a little intertwined, so you may need to _generalize_.
 
-Recall that `e` is the inverse of the natural log. As t increases/decreases, the result is closer to 1 or 0. When t = 0, the result would be 0.5.
-
-Since `t` decides how much to increase or decrease the value away from 0.5, `t` can help with interpretation when solving for something like a coefficient. But in its current form, it is not as useful.
-
-<a name="demo-logit"></a>
-### Demo: What does the Sigmoid Function look like on a chart?
-
-Use the sigmoid function above (`1 / 1 + e^-t`) with values of `t` between -6 and 6 and chart in on a graph. Do this by hand or write some python code to evaluate it (`e = 2.71`). Do we get the s shape we expect?
-
-### Fix 3: Odds and Log-Odds
-
-As mentioned above, the _logit_ function is the inverse of the _sigmoid_ function, and acts as our _link_ function. Mathematically it's represented as:
-
-`ln(p / (1 - p))`
-
-Here, the value within the natural log (`p / (1 - p)`) represents _odds_. Taking the natural log of odds generates _log odds_ (hence, logit).
-
-The beauty of the logit function is that it allows for values between negative infinity and infinity, but provides us probabilities between 0 and 1.
-
-**Check:** Why is this important? What does this remind us of?
-
-For example, a logit value (log odds) of .2 (or odds of ~1.2/1):
-
-`0.2 = ln(p / (1 -p))` ()
-
-with a mean probability of 0.5, means the adjusted probability would be _about_ 0.55:
-
-`1 / (1 + e^-.2)` (python: `1 / (1 + numpy.exp(-0.2)`)
-
-While the logit value (log odds) represents the _coefficients_ in the logistic function, we can convert them into odds ratios that would be more easily interpretable.
-
-It's through these coefficients that we gain our overall probability: the logistic regression draws a linear decision line which solves if an observation belongs in one class or another:
-
-![](./assets/images/decision_lines.png)
-
-
-<a name="guided-practice-logit"></a>
-## Guided Practice: Wager these odds!
-
-Given the odds below for some football games, use the _logit_ function and the _sigmoid_ function to solve for the _probability_ that the "better" team would win.
-
-You'll first want to write two python functions:
+Here's some starter code to get you going:
 
 ```python
-def logit_func(odds):
-    # uses a float (odds) and returns back the log odds (logit)
-    return None
+from sklearn import datasets, neighbors, metrics
+import pandas as pd
 
-def sigmoid_func(logit):
-    # uses a float (logit) and returns back the probability
-    return None
+iris = datasets.load_iris()
+irisdf = pd.DataFrame(iris.data, columns=iris.feature_names)
+irisdf['target'] = iris.target
+cmap = {'0': 'r', '1': 'g', '2': 'b' }
+irisdf['ctarget'] = irisdf.target.apply(lambda x: cmap[str(x)])
+irisdf.plot('petal length (cm)', 'petal width (cm)', kind='scatter', c=irisdf.ctarget)
+print irisdf.plot('petal length (cm)', 'petal width (cm)', kind='scatter', c=irisdf.ctarget)
+print irisdf.describe()
+
+# starter code
+def my_classifier(row):
+    if row['petal length (cm)'] < 2:
+        return 0
+    else:
+        return 1
+
+predictions = irisdf.apply(my_classifier, axis=1)
 
 ```
 
-1. Stanford : Iowa, 5:1
-2. Alabama : Michigan State, 20:1
-3. Clemson : Oklahoma, 1.1:1
-4. Houston : Florida State, 1.8:1
-5. Ohio State : Notre Dame, 1.6:1
+1. How simple could the if-else classifier be to still be _relatively_ accurate?
+2. How complicated could this if-else classifier be to be _completely_ accurate? How many if-else statements would you need, or nested if-else statements, in order to get the classifier 100% accurate? (The above uses a count of 2).
+3. **RECALL** Which if-else classifier would work better against iris data that it hasn't seen? Why is that the case?
 
+> Instructor Note: See [solution code](./code/solution-code/solution-code-8.ipynb) for more detail.
 
-<a name="ind--practice-logit"></a>
-## Independent Practice: Logistic Regression Implementation
+---
 
-Use the data `collegeadmissions.csv` and the [Logistic Regression](http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html) estimator in sklearn in order to predict the target variable `admit`. Your objectives are:
+<a name="introduction-knn"></a>
+## Introduction: What is K Nearest Neighbors? (5 mins)
 
-1. What is the bias, or prior probability, of the dataset?
-2. Build a simple model with one feature and explore the `coef_` value: does this represent the odds, or logit (log odds)?
-3. Build a more complicated model using multiple features. Interpreting the odds, which features have the most impact on admission rate? Which features have the least?
-4. Report back on the accuracy of your model.
+K Nearest Neighbors (KNN) is a fairly straightforward algorithm used for classification:
 
+1. For a given point, calculate the distance to all other points.
+2. Given those distances, pick the k closest points.
+3. Calculate the probability of each class label given those points
+4. The original point is classified as the class label with the largest probability ("votes").
 
-<a name="intro-eval"></a>
-## Introduction: Advanced Classification Metrics: Precision, Recall, AUC.
+KNN uses distance to predict a class label. This is a different application of distance--previously we've used distance to calculate error in regression problems; now, we'll use it as a measure of similarity between classifications.
 
-Accuracy is only one of several metrics used when solving for a classification problem. It is best defined as `total predicted correct / total data set`. But accuracy alone isn't always usable.
+If I picked an arbitrary M&M's from a table without looking, but knew exactly _where_ I picked it from, I could use the surrounding M&M colors to make my most educated guess of what color candy is in my hand. This is a natural thing to do; if we're unfamiliar with something we're looking at, we'll typically look for things that are similar, identify which traits are shared the most, then use that information to gauge whether the new item is similar to something we already know.
 
-For example, if we know a prediction is 75% accurate, accuracy doesn't provide any insight into why the 25% was wrong. Was it wrong _equally_ across all class labels? Did it just guess one class label for all predictions and 25% of the data was just the other label?
+**Check:** Can you think of other examples where we commonly use this heuristic?
 
-It's important to look at other metrics to fully understand the problem.
+---
 
-![confusion_matrix](https://github.com/podopie/DAT18NYC/raw/83dc789584a3349096988bbe14ffd7b87acef5e8/classes/img/confusion_matrix_metrics.png)
+<a name="demo-practice-knn"></a>
+## Demo: KNN In Action
 
-We can split up the accuracy of each label by using _True Positive Rate_ and _False Positive Rate_.
+Below is some sample code that loads in the iris dataset.
 
-- **True Positive Rate (TPR)**: Out of all of the target class labels, how many were accurately predicted to belong to that class?
-    - Real world example: Given a medical exam that tests for cancer, how often does it correctly identify patients with cancer?
+```python
+from sklearn import datasets, neighbors, metrics
+import pandas as pd
 
-- **False Positive Rate (FPR)**: The inverse of TPR. Out of all items not belonging to a class label, how many were predicted as belonging to the target class label?
-    - Real world example: Given a medical exam that tests for cancer, how often does it trigger a "false alarm" by saying a patient has cancer when they actually don't?
+iris = datasets.load_iris()
+# n_neighbors is our option in KNN. We'll tune this value to attempt to improve our prediction.
+knn = neighbors.KNeighborsClassifier(n_neighbors=5, weights='uniform')
+knn.fit(iris.data[:,2:], iris.target)
+print knn.predict(iris.data[:,2:])
+print iris.target
 
-Likewise, this can be inverted: how often does a test _correctly_ identify patients without cancer, and how often does a test _incorrectly_ identify patients as being cancer-free when they might actually have cancer! By building on true positive and false positive rates, you can get a much clearer picture of where predictions begin to fall apart.
+print knn.score(iris.data[:,2:], iris.target)
+```
 
-A good classifier would have a true positive rate approaching 1, and a false positive rate approaching 0. In a binary problem (say, predicting if someone smokes or not), it would accurately predict _all_ of the smokers as smokers, and not accidentally predict any of the nonsmokers as smokers.
+Above we have the simplest implementation of KNN using sklearn, attempting to predict one of three iris types based the size of the iris. We use the default `n_neighbors` of 5, which will remove most ties. Of course, there could be ties; for example, if there are three labels, and two of them get two votes each, the last label would get one vote.
 
-Logically, we like single numbers for optimizing, so we can use a metric called Area Under the Curve (AUC), which summarizes the impact of TPR and FPR in one single value. This is also called the Receiver Operating Characteristic (ROC). ROC/AUC is a measure of area under a curve that is described by the TPR and FPR.
+### What happens in ties?
+It is certainly possible for a KNN classifier to have a tie for votes: in binary classification, we'd see this using 4 for k and each value (0 and 1) getting two votes each. For sklearn, in the case of ties, it will designate the class based on what it saw first in the _training set_.
 
-![](http://scikit-learn.org/stable/_images/plot_roc_001.png)
+We can also implement a _weight_, so that the total distance plays a more significant role. Try changing the `weights` argument in the previous code to "distance" and see how it affects the accuracy.
 
-Using the logic of TPR and FPR above:
+### What happens with high dimensionality?
 
-1. If we have a TPR of 1 (all positives are marked positive) and an FPR of 0 (all negatives are not marked positive), we'd have an AUC of 1. This means everything was accurately predicted.
-2. If we have a TPR of 0 (all positives are not marked positive) and an FPR of 0 (all negatives are marked positive), we'd have an AUC of 0. This means nothing was predicted accurately.
-3. An AUC of .5 would suggest randomness (somewhat), and is an excellent benchmark to use for prediction (is my AUC above .5?)
+In regressions, we could use L1 regularization when we have significantly more features than observations.
 
-Keep in mind that sklearn has all of these metrics on [one handy page](http://scikit-learn.org/stable/modules/classes.html#sklearn-metrics-metrics).
+With KNN, we do _not_ have regularization, and a different problem: since KNN works with distance, higher dimensionality of data (i.e. more features) requires _significantly_ more samples in order to have the same predictive power. Consider this: with more dimensions, all points slowly start averaging out to be equally distant; this causes significant issues for KNN! Keep the feature space limited, and KNN can do well.
 
+In a related example, consider the similarity of users for a particular product. When the product is very broad (for example, a newspaper/news website), the audience will also be very broad, so the newspaper will likely have many features: different sections, topics, types of stories, writers, etc. Yet with so many different different parts that appeal to such a broad audience, user similarity should actually be high!
 
-<a name="guided-practice-eval"></a>
-## Guided Practice: How to decide which metric to use?
+What about a product like toothpaste? While it also appeals to a broad audience, the _types_ of toothpaste (and the features that separate them) are quite limited. It would be much simpler to identify "distance" between toothpaste users, since the feature set ("has fluoride," "controls tarter", etc) is much smaller.
 
-While AUC seems like a nice "golden standard" for evaluating binary classification, it could be _further_ improved, depending on your classification problem. There will be instances where error in positives vs negative matches will be very important.
+<a name="introduction-eval"></a>
+## Introduction to Classification Metrics
 
-For each of the following examples:
+The previous metrics we've used for regressions do not apply for classification.
 
-1. Write a confusion matrix: true positive, false positive, true negative, false negative. Then decide what each square represents for that specific example.
-2. Define the _benefit_ of a true positive and true negative.
-3. Define the _cost_ of a false positive and false negative.
-4. Determine at what point does the cost of a failure outweigh the benefit of a success? This would help you decide how to optimize TPR, FPR, and AUC.
+We _could_ measure distance between the probability of a given class and an item being in the class: for example, guessing .6 for a 1 is a .4 error, while guessing .99 for 1 is .01 error... but this overly complicates our current goal: understanding binary classifications, like whether something is right or wrong.
 
-**Examples**
+Instead, let's start with two new metrics, which are inverses of each other: accuracy and misclassification rate.
 
-1. A test is developed for determining if a patient has cancer or not
-2. A newspaper company is targeting a marketing campaign for "at risk" users that may stop paying for the product soon.
-3. You build a spam classifier for your email system.
+Accuracy's equation is simple: of all the samples/observations we predicted, how many were correct? This is a value we'd want to increase (like r-squared).
 
+Misclassification rate is directly opposite; of all the samples/observations we predicted, how many were incorrect? This is a value we'd want to decrease (like mean squared error).
 
-<a name="ind-practice-eval"></a>
-## Independent Practice: Evaluating Logistic Regression with Alternative Metrics
+Since they are opposite of each other, you can pick one or the other; effectively they will be the same. But when coding, **do** make sure that you are using a classification metric when solving a classification problem!
 
-[Kaggle's common online exercise](https://www.kaggle.com/c/titanic) is exploring survival data from the Titanic.
+SKLearn will not intuitively understand if you are doing classification or regression, and accidentally using mean squared error for classification, or accuracy for regression, is a common programming pitfall.
 
-**Learning Goals**:
+<a name="ind-practice-knn"></a>
+## Independent Practice: Solving for K
 
-1. Spend a few minutes determining which data would be most important to use in the prediction problem. You may need to create new features based on the data available. Consider using a feature selection aide in sklearn. For a worst case scenario, identify one or two strong features that would be useful to include in this model.
+One of the primary challenges of KNN is solving for k--how many neighbors do we use?
 
-2. Spend 1-2 minutes considering which _metric_ makes the most sense to optimize. Accuracy? FPR or TPR? AUC? Given the business problem of understanding survival rate aboard the Titanic, why should you use this metric?
+1. The **smallest** k we can use is 1: however, using only one neighbor will probably perform poorly.
+2. The **largest** k we can use is n-1; that is, every _other_ point in the data set. But without weighting, this would always set it to the class with the largest sample size! Within the Iris data set, we should see at some value k and greater, the performance will flat line (in a bad way).
 
-3. Build a tuned Logistic model. Be prepared to explain your design (including regularization), metric, and feature set in predicting survival using any tools necessary (such as a fit chart). Use the [starter code](./code/starter-code/starter-code-9.ipynb) to get you going.
+Using the [following starter code](./code/starter-code/starter-code-8.ipynb) and the iris data set, test and evaluate the following questions:
+
+1. What is the accuracy for when using k=1?
+2. What is the accuracy for using (most of, all) the other points as neighbors perform?
+3. At what point, with cross validation, does k optimize accuracy? How many k for the best accuracy score for this data set?
+
+Look at the grid_scores and contextualize the results a bit with a figure using matplotlib, where the x-axis represents `k`, and the y-axis represents accuracy (we call this a "fit chart"). This fit chart, and a print out of the scores, will help you answer the questions above.
+
+```python
+from sklearn import grid_search
+
+# some n_list! keep in mind cross validation
+# recall: what's an effective way to create a numerical list in python?
+params = {'n_neighbors': }
+
+gs = grid_search.GridSearchCV(
+    estimator=,
+    param_grid=,
+    cv=,
+)
+gs.fit(iris.data, iris.target)
+gs.grid_scores_
+```
+
+#### Bonus:
+
+1. By default, the KNN classifier in SKlearn uses the _Minkowski metric_ for distance, given p: this is how it decides to calculate distance (using a triangle, p=1 is using the length of sides 1+2 to get the distance from a to c; p=2 using the length of side 3).
+    - What _type_ of data does this metric work best for?
+    - What _type_ of data does this distance metric may not work for?
+        - For help, read about [distance metrics in the sklearn documentation](http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.DistanceMetric.html#sklearn.neighbors.DistanceMetric).
+2. It's possible to use KNN as a regression estimator. Using independent reading or your own brilliant creativity, come up with the following:
+    - Steps that KNN Regression would follow
+    - How it predicts a regression value
+
+> Instructor Note: See [solution code](./code/solution-code/solution-code-8.ipynb) for more detail.
+
+---
 
 <a name="conclusion"></a>
-### Review
+## Conclusion (5-10 mins)
 
-1. What's the link function used in logistic regression?
-2. What kind of machine learning problems does logistic regression address?
-3. What do the _coefficients_ in a logistic regression represent? How does the interpretation differ from ordinary least squares? How is it similar?
-4. How does True Positive Rate and False Positive Rate help explain accuracy?
-5. What would an AUC of 0.5 represent for a model? What about an AUC of 0.9?
-6. Why might one classification metric be more important to tune than another? Give an example of a business problem or project where this would be the case.
+1. What are class labels? What does it mean to classify?
+2. How is a classification problem different from a regression problem? How are they similar?
+3. How does the KNN algorithm work?
+4. What primary parameters are available for tuning a KNN estimator?
+5. How do you define: accuracy, misclassification?
 
 ***
 
 ### BEFORE NEXT CLASS
 |   |   |
 |---|---|
-| **DUE TODAY**  | [Project 3](../../projects/unit-projects/project-3/readme.md)  |
+| **UPCOMING PROJECTS**  | [Final Project, Deliverable 1](../../projects/final-projects/01-lightning-talk/readme.md)  |
 
 ### ADDITIONAL RESOURCES
 

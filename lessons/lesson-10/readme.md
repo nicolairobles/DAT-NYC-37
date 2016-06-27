@@ -1,340 +1,261 @@
 ---
-title: Communicating Results
-duration: "02:50"
+title: Logistic Regression
+duration: 3:00
 creator:
     name: Ed Podojil
     city: NYC
+    dataset: college admissions
 ---
 
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Communicating Results
-DS | Lesson 10
+# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Introduction to Logistic Regression
+DS | Lesson 9
 
 ### LEARNING OBJECTIVES
 *After this lesson, you will be able to:*
-
-- Explain the trade-offs between the precision and recall of a model while articulating the cost of false positives vs. false negatives.
-- Describe the difference between visualization for presentations vs. exploratory data analysis
-- Identify the components of a concise, convincing report and how they relate to specific audiences/stakeholders
+- Build a Logistic regression classification model using the sci-kit learn library
+- Describe the sigmoid function, odds, and odds ratios as well as how they relate to logistic regression
+- Evaluate a model using metrics, such as: classification accuracy/error, confusion matrix, ROC / AOC curves, and loss functions
 
 ### STUDENT PRE-WORK
 *Before this lesson, you should already be able to:*
-
-- Understand results from a confusion matrix, and measure true positive rate and false positive rate
-- Create and interpret results from a binary classification problem
-- Know what a decision line is in logistic regression
+- Implement a linear model (LinearRegression) with sklearn
+- Define the concept of coefficients
+- Recall metrics for accuracy and misclassification
+- Recall the differences between L1 and L2 regularization
 
 ### INSTRUCTOR PREP
-*Before this lesson, instructors will need to:*
+*Before this lesson, instructors will have to:*
 
 - Review [Unit Project 4](../../projects/unit-projects/project-4/readme.md)
-- Copy and modify the [lesson slide deck](./assets/slides/slides-10.md)
+- Copy and modify the [lesson slide deck](./assets/slides/slides-9.md)
 - Read through datasets and starter/solution code
 - Add to the "Additional Resources" section for this lesson
 
 ### LESSON GUIDE
 | TIMING  | TYPE  | TOPIC  |
 |:-:|---|---|
-| 5 min  | [Opening](#opening) | We Built A Model |
-| 10 min  | [Introduction](#intro-confusion-matrix) | Back to the Confusion Matrix |
-| 15 min  | [Introduction](#intro-precision-recall) | Precision and Recall |
-| 15 min  | [Demo](#demo-tradeoff) | Understanding Tradeoff |
-| 15 min  | [Guided Practice](#guided-practice-cba) | Cost Benefit Analysis |
-| 15 min  | [Introduction](#intro-work) | Showing Work |
-| 50 min  | [Guided Practice](#guided-practice-models) | Visualizing Models Over Variables |
-| 45 min  | [Independent Practice](#ind-practice-projects) | Project Practice |
-| 5 min  | [Conclusion](#conclusion) | Review and Next Steps |
-
----
+| 5 min  | [Opening](#opening) | Discuss lesson objectives, Reviewing Probability |
+| 20-25 mins | [Introduction](#intro-logit) | Intro to Logistic Regression |
+| 10-15 mins | [Demo](#demo-logit)  | Demo of the Sigmoid Function |
+| 10-15 mins | [Guided Practice](#guided-practice-logit)  | Calculating Probabilities given Odds using Sigmoid |
+| 15-20 mins | [Independent Practice](#ind-practice-logit) | Implementing and Practicing Logistic Regression in Sklearn |
+| 20-25 mins | [Introduction](#intro-eval) | Intro to additional classification metrics and the confusion matrix |
+| 10-15 mins | [Guided Practice](#guided-practice-eval) | Determining proper metrics given classification problems |
+| 30-35 mins | [Independent Practice](#ind-practice-eval)  | Optimizing a logistic regression using new metrics  |
+| 5-10 mins | [Conclusion](#conclusion) | Review |
 
 <a name="opening"></a>
-## Opening: We Built A Model (5 mins)
-#### We built a model! Now what?
+## Opening (5 minutes)
 
-Congrats! You've been building models. But now there is a major stepping stone between your Jupyter notebooks, some matplotlib figures, and the inevitable PowerPoint that will be presented in front of your colleagues.
+Read through the following questions and brainstorm answers for each:
 
-Classes so far have heavily focused on two core concepts: developing consistent practice with pandas, matplotlib, and sklearn, and interpreting metrics that help evaluate the performance of models. But what does this really mean to the end user? Imagine user responses to some of the following statements:
+1. In class, we've covered two different types of algorithms so far: the *linear model* (ordinary least squares, OLS) and *k-nearest neighbors* (KNN). What are the main differences between these two? What is different about how they approach solving the problem?
+    - For example, what is _interpretable_ about OLS compared to what's _interpretable_ in KNN?
 
-1. The predictive model I built has an accuracy of 80%.
-2. The logistic regression was optimized with L2 regularization, so you know it's good.
-3. Gender was more important than age in the predictive model because it had a larger coefficient.
-4. Here's the AUC chart that shows how well the model did.
+    > A: OLS is used to solve a continuous regression problem, while KNN is used to solve a categorical problem.
 
-How might your stakeholders respond? How would you respond back?
+2. What would be the advantage of using a linear model like OLS to solve a classification problem, compared to KNN?
+    - What are some challenges for using OLS to solve a classification problem (say, if the values were either 1 or 0)?
 
-In a business setting, you are often the only person who can interpret what you've built. While some people may be familiar with basic data visualizations, by and large you will need to do a lot of "hand holding," especially if your team has never worked with data scientists before.
+<a name="intro-logit"></a>
+## Introduction to Logistic Regression
 
-We'll focus this discussion around "simpler" problems (e.g. binary classification), but these tips apply to any type of model you might be working with.
+Logistic Regression is a _linear_ approach to solving a classification problem. That is, we can use a linear model, similar to Linear Regression, in order so solve if an item _belongs or does not belong_ to a class label.
 
-First, let's review some of the knowledge we've developed about classification metrics, append some more, and then we'll talk about you can communicate your results.
+### Challenge! Linear Regression Results for Classification
 
-<a href='#review-confusion-matrix'></a>
-## Review: Back to the Confusion Matrix
+Regression results, as defined, can have a value ranging from negative infinity to infinity. However, not all regression problems will use that entire range. For example, imagine predicting a football player's salary: it wouldn't be negative, and while it would be high, there is an eventual cap.
 
-Let's review the confusion matrix:
+Classification is used when the predicted values (class labels) are not necessarily greater or less than each other. Logically this makes sense, but since most classification problems are binary (0 or 1), and 1 is technically greater than 0... wouldn't it make sense to apply the concept of a regression to solve classification? How could we contain those bounds?
 
-![](assets/images/confusion_matrix.png)
+Below, we'll review some approaches to regression that will show us how to apply it to classification problems.
 
-Confusion matrices, for a binary classification problem, allow for the interpretation of correct and incorrect predictions for _each class label_. Remember, the confusion matrix is the beginning step for the majority of classification metrics, and gives our predictions deeper meaning beyond an accuracy score.
+### Fix 1: Probability
 
-**Recall:** How do we calculate the following metrics?
+One approach is to predict the probability that an observation belongs to a certain class. We could assume that the _prior_ probability (or the _bias_) of a class is the class distribution.
 
-1. Accuracy
-2. True Positive Rate
-3. False Positive Rate
+For example, if we know that roughly 700 people from the Titanic survived out of 2200 total, then without knowing anything about the passengers and crew, the probability of survival would be ~0.32 (32%). However, we still need a way to use a linear function to either increase or decrease the probability of an individual, given any additional data we know about them.
 
-<a href='#intro-precision-recall'></a>
-## Intro: Precision and Recall
+**Check**: This prior probability is most similar to which value in the ordinary least squares formula?
 
-![](assets/images/precision-recall-scatter.png)
+> Answer: Alpha, or the y-intercept
 
-Our previous metrics primarily were designed for less biased data problems: we could be interested in both outcomes, so it was important to generalize our approach.
+### Fix 2: Link Functions and the Sigmoid Function
 
-Precision and Recall are additional metrics built off the confusion matrix, focusing on _information retrieval_, particularly when one class label is more interesting than another.
+![logistic fit vs linear regression fit](./assets/images/log_vs_ols.jpg)
 
-With _precision_, we're interested in producing a high amount of relevancy instead of irrelevancy. With _recall_, we're interesting in seeing how well a model returns specific data (literally, checking whether the model can _recall_ what a class label looked like).
+Another advantage to Ordinary Least Squares is that it allows for _generalized_ models using a _link_ function. Link functions allow us to build a relationship between a linear function and the mean of a distribution.
 
-**Recall** (pun not intended): If the goal of the "recall" metric "recall" is to identify specific values of a class correctly, what other metric performs a similar calculation?
+**Check**: What was the distribution most aligned with OLS/Linear Regression?
 
-> Answer: TPR is the same calculation!
+> Answer: The Normal Distribution
 
-#### Breaking It Down With Math
+For classification, we need a distribution associated for categories: the probability of a given event, given all events. The link function that best allows for this is the _logit_ function, which is the inverse of the _sigmoid_ function.
 
-![](assets/images/confusion_matrix_recall.png)
+We'll start with sigmoid function. A _sigmoid function_, quite simply, is a function that visually looks like an s. While it serves many purposes, a sigmoid function is useful in logistic regression.
 
-In fact, True Positive Rate and Recall are one in the same: calculating true positives over the count of all positives. Another term that is used when looking at labeled AUC figures is _sensitivity_. These terms all have the same calculation: the count of predicted _true positives_ over the total count of that class label.
+Our sigmoid function is defined mathematically as:
 
-Imagine predicting a marble color either green or red. There are 10 of each. If the model identifies 8 of the green marbles as green, the recall, or sensitivity, is .8. However, this says nothing about the number of _red_ marbles that are also identified as green.
+`1 / 1 + e^-t`
 
-![](assets/images/confusion_matrix_precision.png)
+Recall that `e` is the inverse of the natural log. As t increases/decreases, the result is closer to 1 or 0. When t = 0, the result would be 0.5.
 
-Precision, or the _positive predicted value_, is calculated as the count of predicted true positives over the count of all predicted to be positive values. Precision focuses on relevancy.
+Since `t` decides how much to increase or decrease the value away from 0.5, `t` can help with interpretation when solving for something like a coefficient. But in its current form, it is not as useful.
 
-Using the same example: if a model predicts 8 of the green marbles as green, then precision would be 1, because all marbles predicted as green were in fact green. The precision of red marbles (assuming all red marbles were correct, and 2 green were predicted as red) would be roughly 0.833: 10 / (10 + 2)
+<a name="demo-logit"></a>
+### Demo: What does the Sigmoid Function look like on a chart?
 
-![](assets/images/precision-recall-scatter.png)
+Use the sigmoid function above (`1 / 1 + e^-t`) with values of `t` between -6 and 6 and chart in on a graph. Do this by hand or write some python code to evaluate it (`e = 2.71`). Do we get the s shape we expect?
 
-**Check**: What would the precision and recall be for the following confusion matrix (with "green" being "true")?
+### Fix 3: Odds and Log-Odds
 
-             | predicted_green | predicted_not_green
--------------|-----------------|--------------------
-is_green     | 13              | 7
-is_not_green | 8               | 12
+As mentioned above, the _logit_ function is the inverse of the _sigmoid_ function, and acts as our _link_ function. Mathematically it's represented as:
 
+`ln(p / (1 - p))`
 
-The key difference between the two is the attribution and value of an error: should our model be more picky in avoiding false positives (precision), or should it be more picky in avoiding false negatives (recall)?
+Here, the value within the natural log (`p / (1 - p)`) represents _odds_. Taking the natural log of odds generates _log odds_ (hence, logit).
 
-The answer should be determined by the problem you're trying to solve.
+The beauty of the logit function is that it allows for values between negative infinity and infinity, but provides us probabilities between 0 and 1.
 
-<a href='#demo-tradeoff'></a>
-## Demo: Understanding Tradeoff
+**Check:** Why is this important? What does this remind us of?
 
-Let's consider the following data problem: we are given a data set in order to predict or identify traits for typically late flights.
+For example, a logit value (log odds) of .2 (or odds of ~1.2/1):
 
-Optimizing toward precision, we could assume that every flight will be delayed. The trade-off, a lower recall, is that this could create even further delays, missed flights, etc.
+`0.2 = ln(p / (1 -p))` ()
 
-Optimizing toward recall, we would specifically look to identify flights that will be late. The trade-off here would be lower precision; we might miss flights that would be delayed, thus causing a strain on the system.
+with a mean probability of 0.5, means the adjusted probability would be _about_ 0.55:
 
-Below is a sample plot that shows how precision and recall are related for a model used to predict late flights:
+`1 / (1 + e^-.2)` (python: `1 / (1 + numpy.exp(-0.2)`)
 
-![](assets/images/delays-precision-recall.png)
+While the logit value (log odds) represents the _coefficients_ in the logistic function, we can convert them into odds ratios that would be more easily interpretable.
 
-This plot is based on choosing decision line thresholds, much like the AUC figure from the previous class. In terms of the delays model, this would be like moving the decision line for lateness from 0.01 up to 0.99, and then calculating the precision and recall at each decision.
+It's through these coefficients that we gain our overall probability: the logistic regression draws a linear decision line which solves if an observation belongs in one class or another:
 
-Interpreting this, there's a few interesting nuggets compared to the benchmark (blue):
+![](./assets/images/decision_lines.png)
 
-1. At a lower recall (below .2), there is a noticeable lower precision in the model.
-2. Beyond .2 recall, the model outperforms the benchmark.
 
-Whether we're optimizing for recall or precision, this plot will help us decide based on the .2 threshold.
+<a name="guided-practice-logit"></a>
+## Guided Practice: Wager these odds!
 
+Given the odds below for some football games, use the _logit_ function and the _sigmoid_ function to solve for the _probability_ that the "better" team would win.
 
-<a href='#guided-practice-cba'></a>
-## Guided Practice: Cost Benefit Analysis
-
-One tool that complements the confusion matrix is cost-benefit analysis, where you attach a _value_ to correctly and incorrectly predicted data.
-
-Like the Precision-Recall trade off, there is a balancing point to the _probabilities_ of a given position in the confusion matrix, and the _cost_ or _benefit_ to that position. This approach allows you to not only add a weighting system to your confusion matrix, but also to speak the language of your business stakeholders (i.e. communicate your values in dollars!).
-
-Consider the following marketing problem:
-
-As a data scientist working on marketing spend, you've build a model that reduces user churn--the number of users who decide to stop paying for a product--through a marketing campaign. Your model generates a confusion matrix with the following probabilities (these probabilities are calculated as the value in that position over the sum of the sample):
-
-    | TP: 0.2 | FP: 0.2 |
-    ---------------------
-    | FN: 0.1 | TN: 0.5 |
-
-In this case:
-    * The _benefit_ of a true positive is the retention of a user ($10 for the month)
-    * The _cost_ of a false positive is the spend of the campaign per user ($0.05)
-    * The _cost_ of a false negative (someone who could have retained if sent the campaign) is, effectively, 0 (we didn't send it... but we certainly didn't benefit!)
-    * The _benefit_ of a true negative is 0: No spend on users who would have never retained.
-
-To calculate Cost-Benefit, we'll use this following function:
-
-`(P(TP) * B(TP)) + (P(TN) * B(TN)) + (P(FP) * C(FP)) + (C(FN) * C(FN))`
-
-which for our marketing problem, comes out to this:
-
-`(.2 * 10) + (.5 * 0) - (.2 * .05) - (.1 * 0)`
-
-or $1.99 per user targeted.
-
-
-#### Follow up questions:
-
-Think about precision, recall, and cost benefit analysis from the above problem to answer the following questions:
-
-1. How would you rephrase the business problem if your model was optimizing toward _precision_? i.e., How might the model behave differently, and what effect would if have?
-2. How would you rephrase the business problem if your model was optimizing toward _recall_?
-3. What would the most ideal model look like in this case?
-
-
-<a href='#intro-work'></a>
-## Intro: Showing Work
-
-We've spent lots of time exploring our data and building a reasonable model that performs well. However, if we look back at our visuals, they are most likely:
-
-* **Statistically heavy**: You may have built 1,000 histograms, but most people don't actually understand what a histogram represents.
-* **Overly complicated**: Pandas' `scatter_matrix()` is a useful function to quickly explore data, but it's just one example of the type of visuals that shouldn't be shown to a project stakeholder because it's just too much to understand at a glance.
-* **Poorly labeled**: During EDA, you may be quickly flowing through your figures. Since you built them in code, you probably didn't bother labeling them because the code doesn't require it.
-
-
-In order to convey important information to our audiences, we want to make sure our charts are:
-
-* **Simplified**: At most, you'll want to include figures that either explain a variable on its own (explaining the sample or population), or explain that variable's relationship with a target. If your model used a data transformation (like the natural log of a variable), just visualize the original data, as log functions involve an additional layer of explanation.
-* **Easily interpretable**: Any stakeholder looking at the figure should be seeing the exact same thing you're seeing. A good test for this: share the visual with others less familiar with the data, and see if they came to same conclusion. How long did it take them?
-* **Clearly Labeled**: Take the time to clearly label your axis, title the plot, and double check your scales - especially if the figures should be comparable. If you're showing two graphs side by side, they should follow the same Y axis.
-
-When building visuals for another audience, ask yourself these questions:
-
-* **Who**: Who is my target audience for this visual?
-* **What**: What do they already know about this project? What do they need to know?
-* **How**: How does my project affect this audience? How might they interpret (or misinterpret) the data?
-
-We'll review additional plotting tips in later lessons, but the rest of today's class will focus on visualizing your model.
-
-#### Visualizing Models Over Variables
-
-One effective way to explain your model over particular variables is to plot the predicted variables against the most explanatory variables. For example, with logistic regression, plotting the probability of a class against a variable can help explain the range of effect on the model.
-
-Let's use flight delay data as an example:
+You'll first want to write two python functions:
 
 ```python
-# read in the file and generate a quick model (assume we've done the data exploration already)
+def logit_func(odds):
+    # uses a float (odds) and returns back the log odds (logit)
+    return None
 
-import pandas as pd
-import sklearn.linear_model as lm
-import matplotlib.pyplot as plt
+def sigmoid_func(logit):
+    # uses a float (logit) and returns back the probability
+    return None
 
-df = pd.read_csv('../../assets/dataset/flight_delays.csv')
-
-df = df.join(pd.get_dummies(df['DAY_OF_WEEK'], prefix='dow'))
-df = df[df.DEP_DEL15.notnull()].copy()
-
-model = lm.LogisticRegression()
-features = ['dow_1', 'dow_2', 'dow_3', 'dow_4', 'dow_5', 'dow_6']
-model.fit(df[features + ['CRS_DEP_TIME']], df['DEP_DEL15'])
-
-df['probability'] = model.predict_proba(df[features + ['CRS_DEP_TIME']]).T[1]
-
-ax = plt.subplot(111)
-colors = ['blue', 'green', 'red', 'purple', 'orange', 'brown']
-for e, c in enumerate(colors):
-    df[df[features[e]] == 1].plot(x='CRS_DEP_TIME', y='probability', kind='scatter', color = c, ax=ax)
-
-ax.set(title='Probability of Delay\n Based on Day of Week and Time of Day')
 ```
 
-![Plotting Probabilities](assets/images/plotting_proba.png)
-
-A visual like this can help showcase the range of effect on delays from both the day of week and the time of day: given this model, some days are more likely to have delays than others, and the likelihood of a delay increases as the day goes on.
-
-### Try it out
-
-1. Adjust the model to make delay predictions using airlines instead of day of week, and time, then plot the effect on CRS_DEP_TIME=1.
-2. Try plotting the inverse: pick either model and plot the effect on CRS_DEP_TIME=0.
-
-#### Visualizing Performance Against Baseline
-
-Another approach of visualization is the effect of your model against a baseline, or even better, against previous models. Plots like this will also be useful when talking to your peers - other data scientists or analysts who are familiar with your project and interested in the progress you've made.
-
-For classification, we've practiced plotting AUC and precision-recall plots. Consider the premise of each:
-
-* For AUC plots, you want to explain and represent "accuracy" as having the largest area under the curve. Good models will be high to the left.
-* for precision-recall plots, it'll depend on the _cost_ requirements; either a model will have good recall at the cost of precision, or visa versa.
-
-The next step: comparing multiple models. So:
-
-* For AUC plots, you'll be interested in which model has the _largest_ area under the curve
-* For precision-recall plots, based on the cost requirement, you are looking at which model has the best precision given the same recall, or the best recall given the same precision.
-
-Below, we've plotted several models for AUC: a dummy model and additional regression features.
-
-```python
-model0 = dummy.DummyClassifier()
-model0.fit(df[features[1:-1]], df.DEP_DEL15)
-df['probability_0'] = model0.predict_proba(df[features[1:-1]]).T[1]
+1. Stanford : Iowa, 5:1
+2. Alabama : Michigan State, 20:1
+3. Clemson : Oklahoma, 1.1:1
+4. Houston : Florida State, 1.8:1
+5. Ohio State : Notre Dame, 1.6:1
 
 
-model = lm.LogisticRegression()
-model.fit(df[features[1:-1]], df.DEP_DEL15)
-df['probability_1'] = model.predict_proba(df[features[1:-1]]).T[1]
+<a name="ind--practice-logit"></a>
+## Independent Practice: Logistic Regression Implementation
 
-ax = plt.subplot(111)
-vals = metrics.roc_curve(df.DEP_DEL15, df.probability_0)
-ax.plot(vals[0], vals[1])
-vals = metrics.roc_curve(df.DEP_DEL15, df.probability_1)
-ax.plot(vals[0], vals[1])
+Use the data `collegeadmissions.csv` and the [Logistic Regression](http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html) estimator in sklearn in order to predict the target variable `admit`. Your objectives are:
 
-ax.set(title='Area Under the Curve for prediction delayed=1', ylabel='TRP', xlabel='FRP', xlim=(0, 1), ylim=(0, 1))
-```
-
-![](assets/images/auc_curve.png)
-
-This plot showcases:
-
-1. The model using data outperforms a baseline dummy model.
-2. By adding other features, there's some give and take with probability as the model gets more complicated. Try adding additional features (such as time of day) and compare models.
-
-### Try it out
-
-1. In a similar approach, use the sklearn precision_recall_curve function to enable you to plot the precision-recall curve of the four models from above.
-    * Keep in mind precision in the first array is returned from the function, but the plot shows it as the y-axis.
-2. Explain what is occurring when the recall is below 0.2.
-3. Based on this performance, is there a clear winner at different thresholds?
-
-**Bonus** Redo both the AUC and precision-recall curves using models that have been cross validated using kfold. How do these new figures change your expectations for performance?
+1. What is the bias, or prior probability, of the dataset?
+2. Build a simple model with one feature and explore the `coef_` value: does this represent the odds, or logit (log odds)?
+3. Build a more complicated model using multiple features. Interpreting the odds, which features have the most impact on admission rate? Which features have the least?
+4. Report back on the accuracy of your model.
 
 
-<a href='#ind-practice-projects'></a>
-## Independent Practice: Project Practice
+<a name="intro-eval"></a>
+## Introduction: Advanced Classification Metrics: Precision, Recall, AUC.
 
-Using models built from the flight data problem earlier in class, work through the same problems. Your data and models should already be accessible. Your goals:
+Accuracy is only one of several metrics used when solving for a classification problem. It is best defined as `total predicted correct / total data set`. But accuracy alone isn't always usable.
 
-1. There are _many_ ways to manipulate this data set. Consider what is a proper "categorical" variable, and keep _only_ what is significant. You will easily have 20+ variables. Aim to have at least three visuals that clearly explain the relationship of variables you've used against the predictive survival value.
+For example, if we know a prediction is 75% accurate, accuracy doesn't provide any insight into why the 25% was wrong. Was it wrong _equally_ across all class labels? Did it just guess one class label for all predictions and 25% of the data was just the other label?
 
-2. Generate the AUC or precision-recall curve (based on which you think makes more sense), and have a statement that defines, compared to a baseline, how your model performs and any caveats.
+It's important to look at other metrics to fully understand the problem.
 
-For example: "My model on average performs at x rate, but the features under-perform and explain less of the data at these thresholds." Consider this as practice for your own project, since the steps you'll take to present your work will be relatively similar.
+![confusion_matrix](https://github.com/podopie/DAT18NYC/raw/83dc789584a3349096988bbe14ffd7b87acef5e8/classes/img/confusion_matrix_metrics.png)
+
+We can split up the accuracy of each label by using _True Positive Rate_ and _False Positive Rate_.
+
+- **True Positive Rate (TPR)**: Out of all of the target class labels, how many were accurately predicted to belong to that class?
+    - Real world example: Given a medical exam that tests for cancer, how often does it correctly identify patients with cancer?
+
+- **False Positive Rate (FPR)**: The inverse of TPR. Out of all items not belonging to a class label, how many were predicted as belonging to the target class label?
+    - Real world example: Given a medical exam that tests for cancer, how often does it trigger a "false alarm" by saying a patient has cancer when they actually don't?
+
+Likewise, this can be inverted: how often does a test _correctly_ identify patients without cancer, and how often does a test _incorrectly_ identify patients as being cancer-free when they might actually have cancer! By building on true positive and false positive rates, you can get a much clearer picture of where predictions begin to fall apart.
+
+A good classifier would have a true positive rate approaching 1, and a false positive rate approaching 0. In a binary problem (say, predicting if someone smokes or not), it would accurately predict _all_ of the smokers as smokers, and not accidentally predict any of the nonsmokers as smokers.
+
+Logically, we like single numbers for optimizing, so we can use a metric called Area Under the Curve (AUC), which summarizes the impact of TPR and FPR in one single value. This is also called the Receiver Operating Characteristic (ROC). ROC/AUC is a measure of area under a curve that is described by the TPR and FPR.
+
+![](http://scikit-learn.org/stable/_images/plot_roc_001.png)
+
+Using the logic of TPR and FPR above:
+
+1. If we have a TPR of 1 (all positives are marked positive) and an FPR of 0 (all negatives are not marked positive), we'd have an AUC of 1. This means everything was accurately predicted.
+2. If we have a TPR of 0 (all positives are not marked positive) and an FPR of 0 (all negatives are marked positive), we'd have an AUC of 0. This means nothing was predicted accurately.
+3. An AUC of .5 would suggest randomness (somewhat), and is an excellent benchmark to use for prediction (is my AUC above .5?)
+
+Keep in mind that sklearn has all of these metrics on [one handy page](http://scikit-learn.org/stable/modules/classes.html#sklearn-metrics-metrics).
 
 
-<a href='#conclusion'></a>
-## Conclusion: Review and Next Steps
+<a name="guided-practice-eval"></a>
+## Guided Practice: How to decide which metric to use?
 
-1. What do precision and recall mean? How are they similar and different to True Positive Rate and False Positive Rate?
-2. How does cost benefit analysis play a role in building models?
-3. What are at least two very important details to consider when creating visuals for a project's stakeholders?
-4. Why would an AUC plot work well for a data science audience but not for a business audience? What would be a more effective visualization for that group?
+While AUC seems like a nice "golden standard" for evaluating binary classification, it could be _further_ improved, depending on your classification problem. There will be instances where error in positives vs negative matches will be very important.
+
+For each of the following examples:
+
+1. Write a confusion matrix: true positive, false positive, true negative, false negative. Then decide what each square represents for that specific example.
+2. Define the _benefit_ of a true positive and true negative.
+3. Define the _cost_ of a false positive and false negative.
+4. Determine at what point does the cost of a failure outweigh the benefit of a success? This would help you decide how to optimize TPR, FPR, and AUC.
+
+**Examples**
+
+1. A test is developed for determining if a patient has cancer or not
+2. A newspaper company is targeting a marketing campaign for "at risk" users that may stop paying for the product soon.
+3. You build a spam classifier for your email system.
+
+
+<a name="ind-practice-eval"></a>
+## Independent Practice: Evaluating Logistic Regression with Alternative Metrics
+
+[Kaggle's common online exercise](https://www.kaggle.com/c/titanic) is exploring survival data from the Titanic.
+
+**Learning Goals**:
+
+1. Spend a few minutes determining which data would be most important to use in the prediction problem. You may need to create new features based on the data available. Consider using a feature selection aide in sklearn. For a worst case scenario, identify one or two strong features that would be useful to include in this model.
+
+2. Spend 1-2 minutes considering which _metric_ makes the most sense to optimize. Accuracy? FPR or TPR? AUC? Given the business problem of understanding survival rate aboard the Titanic, why should you use this metric?
+
+3. Build a tuned Logistic model. Be prepared to explain your design (including regularization), metric, and feature set in predicting survival using any tools necessary (such as a fit chart). Use the [starter code](./code/starter-code/starter-code-9.ipynb) to get you going.
+
+<a name="conclusion"></a>
+### Review
+
+1. What's the link function used in logistic regression?
+2. What kind of machine learning problems does logistic regression address?
+3. What do the _coefficients_ in a logistic regression represent? How does the interpretation differ from ordinary least squares? How is it similar?
+4. How does True Positive Rate and False Positive Rate help explain accuracy?
+5. What would an AUC of 0.5 represent for a model? What about an AUC of 0.9?
+6. Why might one classification metric be more important to tune than another? Give an example of a business problem or project where this would be the case.
 
 ***
 
 ### BEFORE NEXT CLASS
 |   |   |
 |---|---|
-| Upcoming Projects | [Unit Project 4](../../projects/unit-projects/project-4/readme.md)
+| **DUE TODAY**  | [Project 3](../../projects/unit-projects/project-3/readme.md)  |
 
 ### ADDITIONAL RESOURCES
 
-- [http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.plot.html](Pandas plotting)
-- [http://matplotlib.org/users/text_intro.html](Text with matplotlib)
-- [https://github.com/WeatherGod/AnatomyOfMatplotlib](Anatomy of Matplotlib)
+- Go crazy!
+- Add your own!
