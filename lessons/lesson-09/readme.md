@@ -1,14 +1,5 @@
----
-title: Introduction to Classification
-duration: 2:30
-creator:
-    name: Ed Podojil
-    city: NYC
-    dataset: iris dataset
----
-
 # ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Introduction to Classification
-DS | Lesson 8
+DS | Lesson 9
 
 ### LEARNING OBJECTIVES
 *After this lesson, you will be able to:*
@@ -23,14 +14,6 @@ DS | Lesson 8
 - Understand how to optimize for error in a model
 - Understand the concept of iteration to solve problems
 - Measure basic probability
-
-### INSTRUCTOR PREP
-*Before this lesson, instructors will have to:*
-
-- Review [Final Project, pt 2](../../projects/final-projects/02-experiment-writeup/readme.md)
-- Copy and modify the [lesson slide deck](./assets/slides/slides-8.md)
-- Read through datasets and starter/solution code
-- Add to the "Additional Resources" section for this lesson
 
 ### LESSON GUIDE
 | TIMING  | TYPE  | TOPIC  |
@@ -140,7 +123,7 @@ predictions = irisdf.apply(my_classifier, axis=1)
 2. How complicated could this if-else classifier be to be _completely_ accurate? How many if-else statements would you need, or nested if-else statements, in order to get the classifier 100% accurate? (The above uses a count of 2).
 3. **RECALL** Which if-else classifier would work better against iris data that it hasn't seen? Why is that the case?
 
-> Instructor Note: See [solution code](./code/solution-code/solution-code-8.ipynb) for more detail.
+
 
 ---
 
@@ -257,8 +240,6 @@ gs.grid_scores_
     - Steps that KNN Regression would follow
     - How it predicts a regression value
 
-> Instructor Note: See [solution code](./code/solution-code/solution-code-8.ipynb) for more detail.
-
 ---
 
 <a name="conclusion"></a>
@@ -272,12 +253,6 @@ gs.grid_scores_
 
 ***
 
-### BEFORE NEXT CLASS
-|   |   |
-|---|---|
-| **UPCOMING PROJECTS**  | [Final Project, Deliverable 1](../../projects/final-projects/01-lightning-talk/readme.md)  |
 
 ### ADDITIONAL RESOURCES
 
-- Go crazy!
-- Add your own!

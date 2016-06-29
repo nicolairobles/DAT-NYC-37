@@ -1,12 +1,3 @@
----
-title: Logistic Regression
-duration: 3:00
-creator:
-    name: Ed Podojil
-    city: NYC
-    dataset: college admissions
----
-
 # ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Introduction to Logistic Regression
 DS | Lesson 9
 
@@ -22,14 +13,6 @@ DS | Lesson 9
 - Define the concept of coefficients
 - Recall metrics for accuracy and misclassification
 - Recall the differences between L1 and L2 regularization
-
-### INSTRUCTOR PREP
-*Before this lesson, instructors will have to:*
-
-- Review [Unit Project 4](../../projects/unit-projects/project-4/readme.md)
-- Copy and modify the [lesson slide deck](./assets/slides/slides-9.md)
-- Read through datasets and starter/solution code
-- Add to the "Additional Resources" section for this lesson
 
 ### LESSON GUIDE
 | TIMING  | TYPE  | TOPIC  |
