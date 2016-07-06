@@ -25,10 +25,10 @@ The repository to upload projects can be found here: https://github.com/ga-stude
 | | | **Unit 2 - Foundations of Data Modeling** | |
 | 3 | 6/20 | [Introduction to Regression and Model Fit](./lessons/lesson-06) | **[Unit Project 2](./unit-projects/2) due** |
 | 4 | 6/22 | [Introduction to Regression and Model Fit, Part 2](./lessons/lesson-07) | |
-| 4 | 6/27 | [Introduction to Classification](./lessons/lesson-08) | **[Final Project 1](./final-project/1) due** |
-| 5 | 6/29 | [Introduction to Logistic Regression](./lessons/lesson-09) | |
-| 5 | 7/6 | [Advanced Metrics and Communicating Results](./lessons/lesson-10) | **[Unit Project 3](./unit-projects/3) due** |
-| 6 | 7/11 | Flexible Class Session | **[Final Project 2](./final-project/2) due** |
+| 4 | 6/27 | [In-Class Project: Building a model](./lessons/lesson-08) |  |
+| 5 | 6/29 | [Introduction to Classification](./lessons/lesson-09) | **[Final Project 1](./final-project/1) due** |
+| 5 | 7/6 | [Introduction to Logistic Regression](./lessons/lesson-09) | |
+| 6 | 7/11 | [Advanced Metrics and Communicating Results](./lessons/lesson-10) | **[Unit Project 3](./unit-projects/3) due** |
 | | | **Unit 3 - Data Science in the Real World** | |
 | 6 | 7/13 | Decision Trees and Random Forests | |
 | 7 | 7/18 | Natural Language Processing and Text Classification | **[Final Project 3](./final-project/3) due** |

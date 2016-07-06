@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 title: Logistic Regression
 duration: 3:00
@@ -7,6 +8,8 @@ creator:
     dataset: college admissions
 ---
 
+=======
+>>>>>>> 45eefa917b0922d1ca05347b58897d7e3edc968a
 # ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Introduction to Logistic Regression
 DS | Lesson 9
 
@@ -22,6 +25,7 @@ DS | Lesson 9
 - Define the concept of coefficients
 - Recall metrics for accuracy and misclassification
 - Recall the differences between L1 and L2 regularization
+<<<<<<< HEAD
 
 ### INSTRUCTOR PREP
 *Before this lesson, instructors will have to:*
@@ -30,6 +34,8 @@ DS | Lesson 9
 - Copy and modify the [lesson slide deck](./assets/slides/slides-9.md)
 - Read through datasets and starter/solution code
 - Add to the "Additional Resources" section for this lesson
+=======
+>>>>>>> 45eefa917b0922d1ca05347b58897d7e3edc968a
 
 ### LESSON GUIDE
 | TIMING  | TYPE  | TOPIC  |
@@ -46,6 +52,94 @@ DS | Lesson 9
 
 <a name="opening"></a>
 ## Opening (5 minutes)
+<<<<<<< HEAD
+
+Read through the following questions and brainstorm answers for each:
+
+1. In class, we've covered two different types of algorithms so far: the *linear model* (ordinary least squares, OLS) and *k-nearest neighbors* (KNN). What are the main differences between these two? What is different about how they approach solving the problem?
+    - For example, what is _interpretable_ about OLS compared to what's _interpretable_ in KNN?
+
+    > A: OLS is used to solve a continuous regression problem, while KNN is used to solve a categorical problem.
+
+2. What would be the advantage of using a linear model like OLS to solve a classification problem, compared to KNN?
+    - What are some challenges for using OLS to solve a classification problem (say, if the values were either 1 or 0)?
+
+<a name="intro-logit"></a>
+## Introduction to Logistic Regression
+
+Logistic Regression is a _linear_ approach to solving a classification problem. That is, we can use a linear model, similar to Linear Regression, in order so solve if an item _belongs or does not belong_ to a class label.
+
+### Challenge! Linear Regression Results for Classification
+
+Regression results, as defined, can have a value ranging from negative infinity to infinity. However, not all regression problems will use that entire range. For example, imagine predicting a football player's salary: it wouldn't be negative, and while it would be high, there is an eventual cap.
+
+Classification is used when the predicted values (class labels) are not necessarily greater or less than each other. Logically this makes sense, but since most classification problems are binary (0 or 1), and 1 is technically greater than 0... wouldn't it make sense to apply the concept of a regression to solve classification? How could we contain those bounds?
+
+Below, we'll review some approaches to regression that will show us how to apply it to classification problems.
+
+### Fix 1: Probability
+
+One approach is to predict the probability that an observation belongs to a certain class. We could assume that the _prior_ probability (or the _bias_) of a class is the class distribution.
+
+For example, if we know that roughly 700 people from the Titanic survived out of 2200 total, then without knowing anything about the passengers and crew, the probability of survival would be ~0.32 (32%). However, we still need a way to use a linear function to either increase or decrease the probability of an individual, given any additional data we know about them.
+
+**Check**: This prior probability is most similar to which value in the ordinary least squares formula?
+
+> Answer: Alpha, or the y-intercept
+
+### Fix 2: Link Functions and the Sigmoid Function
+
+![logistic fit vs linear regression fit](./assets/images/log_vs_ols.jpg)
+
+Another advantage to Ordinary Least Squares is that it allows for _generalized_ models using a _link_ function. Link functions allow us to build a relationship between a linear function and the mean of a distribution.
+
+**Check**: What was the distribution most aligned with OLS/Linear Regression?
+
+> Answer: The Normal Distribution
+
+For classification, we need a distribution associated for categories: the probability of a given event, given all events. The link function that best allows for this is the _logit_ function, which is the inverse of the _sigmoid_ function.
+
+We'll start with sigmoid function. A _sigmoid function_, quite simply, is a function that visually looks like an s. While it serves many purposes, a sigmoid function is useful in logistic regression.
+
+Our sigmoid function is defined mathematically as:
+
+`1 / 1 + e^-t`
+
+Recall that `e` is the inverse of the natural log. As t increases/decreases, the result is closer to 1 or 0. When t = 0, the result would be 0.5.
+
+Since `t` decides how much to increase or decrease the value away from 0.5, `t` can help with interpretation when solving for something like a coefficient. But in its current form, it is not as useful.
+
+<a name="demo-logit"></a>
+### Demo: What does the Sigmoid Function look like on a chart?
+
+Use the sigmoid function above (`1 / 1 + e^-t`) with values of `t` between -6 and 6 and chart in on a graph. Do this by hand or write some python code to evaluate it (`e = 2.71`). Do we get the s shape we expect?
+
+### Fix 3: Odds and Log-Odds
+
+As mentioned above, the _logit_ function is the inverse of the _sigmoid_ function, and acts as our _link_ function. Mathematically it's represented as:
+
+`ln(p / (1 - p))`
+
+Here, the value within the natural log (`p / (1 - p)`) represents _odds_. Taking the natural log of odds generates _log odds_ (hence, logit).
+
+The beauty of the logit function is that it allows for values between negative infinity and infinity, but provides us probabilities between 0 and 1.
+
+**Check:** Why is this important? What does this remind us of?
+
+For example, a logit value (log odds) of .2 (or odds of ~1.2/1):
+
+`0.2 = ln(p / (1 -p))` ()
+
+with a mean probability of 0.5, means the adjusted probability would be _about_ 0.55:
+
+`1 / (1 + e^-.2)` (python: `1 / (1 + numpy.exp(-0.2)`)
+
+While the logit value (log odds) represents the _coefficients_ in the logistic function, we can convert them into odds ratios that would be more easily interpretable.
+
+It's through these coefficients that we gain our overall probability: the logistic regression draws a linear decision line which solves if an observation belongs in one class or another:
+
+![](./assets/images/decision_lines.png)
+=======
 
 Read through the following questions and brainstorm answers for each:
 
@@ -133,12 +227,21 @@ It's through these coefficients that we gain our overall probability: the logist
 
 ![](./assets/images/decision_lines.png)
 
+>>>>>>> 45eefa917b0922d1ca05347b58897d7e3edc968a
 
+<a name="guided-practice-logit"></a>
+## Guided Practice: Wager these odds!
+
+<<<<<<< HEAD
 <a name="guided-practice-logit"></a>
 ## Guided Practice: Wager these odds!
 
 Given the odds below for some football games, use the _logit_ function and the _sigmoid_ function to solve for the _probability_ that the "better" team would win.
 
+=======
+Given the odds below for some football games, use the _logit_ function and the _sigmoid_ function to solve for the _probability_ that the "better" team would win.
+
+>>>>>>> 45eefa917b0922d1ca05347b58897d7e3edc968a
 You'll first want to write two python functions:
 
 ```python
