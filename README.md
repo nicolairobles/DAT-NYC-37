@@ -27,14 +27,14 @@ The repository to upload projects can be found here: https://github.com/ga-stude
 | 4 | 6/22 | [Introduction to Regression and Model Fit, Part 2](./lessons/lesson-07) | |
 | 4 | 6/27 | [In-Class Project: Building a model](./lessons/lesson-08) |  |
 | 5 | 6/29 | [Introduction to Classification](./lessons/lesson-09) | **[Final Project 1](./final-project/1) due** |
-| 5 | 7/6 | [Introduction to Logistic Regression](./lessons/lesson-09) | |
-| 6 | 7/11 | [Advanced Metrics and Communicating Results](./lessons/lesson-10) | **[Unit Project 3](./unit-projects/3) due** |
+| 5 | 7/6 | [Classification with K-Nearest Neighbors](./lessons/lesson-10) | |
+| 6 | 7/11 | [Decision Trees and Random Forests](./lessons/lesson-11) | |
+| 6 | 7/13 | [Introduction to Logistic Regression](./lessons/lesson-12) | |
 | | | **Unit 3 - Data Science in the Real World** | |
-| 6 | 7/13 | Decision Trees and Random Forests | |
-| 7 | 7/18 | Natural Language Processing and Text Classification | **[Final Project 3](./final-project/3) due** |
-| 7 | 7/20 | Latent Variables and Natural Language Processing | |
-| 8 | 7/25 | Time Series Data | **[Unit Project 4](./unit-projects/4) due** |
-| 8 | 7/27 | Time Series Data, Part 2 | |
+| 7 | 7/18 | [Advanced Metrics and Communicating Results](./lessons/lesson-10) | **[Unit Project 3](./unit-projects/3) due** |
+| 7 | 7/20 | Natural Language Processing and Text Classification | **[Final Project 3](./final-project/3) due** |
+| 8 | 7/25 | Latent Variables and Natural Language Processing | |
+| 8 | 7/27 | Time Series Data | **[Unit Project 4](./unit-projects/4) due** |
 | 9 | 8/1 | Introduction to Databases | **[Final Project 4](./final-project/4) due** |
 | 9 | 8/3 | Wrapping Up and Next Steps | |
 | 10 | 8/8 | Final Project Presentations | **[Final Project 5](./final-project/5) due** |
