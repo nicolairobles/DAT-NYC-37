@@ -1,10 +1,11 @@
 # ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Project #3: Modeling Assignment
+DS | Unit Project 3
 
 ### PROMPT
 
-In this project, you will perform a KNN classification on the admissions data we've been working with in projects 1 and 2. For more instructions, follow the questions included in the starter code.
+In this project, you will perform a logistic regression on the admissions data we've been working with in projects 1 and 2. For more instructions, follow the questions included in the starter code.
 
-**Goal:** Completed iPython notebook that includes basic modeling using KNN
+**Goal:** Completed iPython notebook that includes basic modeling using logistic regression
 
 ---
 
@@ -19,9 +20,10 @@ In this project, you will perform a KNN classification on the admissions data we
 - **Bonus:** 
     - Plot the predicted probabilities
     - Brainstorm ways to improve your analysis
+    - Use KNN as a classifier and compare your results to your results from when you used Logistic Regression.
 
 - **Submission:**
-    - See timeline in [class README](../../../README.md)
+    - TBD by Instructor
 
 ---
 
