@@ -1,13 +1,5 @@
----
-title: Communicating Results
-duration: "02:50"
-creator:
-    name: Ed Podojil
-    city: NYC
----
-
 # ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Communicating Results
-DS | Lesson 10
+DS | Lesson 11
 
 ### LEARNING OBJECTIVES
 *After this lesson, you will be able to:*
@@ -22,14 +14,6 @@ DS | Lesson 10
 - Understand results from a confusion matrix, and measure true positive rate and false positive rate
 - Create and interpret results from a binary classification problem
 - Know what a decision line is in logistic regression
-
-### INSTRUCTOR PREP
-*Before this lesson, instructors will need to:*
-
-- Review [Unit Project 4](../../projects/unit-projects/project-4/readme.md)
-- Copy and modify the [lesson slide deck](./assets/slides/slides-10.md)
-- Read through datasets and starter/solution code
-- Add to the "Additional Resources" section for this lesson
 
 ### LESSON GUIDE
 | TIMING  | TYPE  | TOPIC  |

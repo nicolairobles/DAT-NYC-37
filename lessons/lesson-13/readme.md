@@ -1,313 +1,244 @@
----
-title: Decision Trees and Random Forests
-duration: "3:00"
-creator:
-    name: Arun Ahuja
-    city: NYC
----
-
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Decision Trees & Random Forests
-DS | Lesson 12
+# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Introduction to Logistic Regression
+DS | Lesson 9
 
 ### LEARNING OBJECTIVES
 *After this lesson, you will be able to:*
-
-- Understand and build decision tree models for classification and regression
-- Understand the differences between linear and non-linear models
-- Understand and build random forest models for classification and regression
-- Know how to extract the most important predictors in a random forest model
-
+- Build a Logistic regression classification model using the sci-kit learn library
+- Describe the sigmoid function, odds, and odds ratios as well as how they relate to logistic regression
+- Evaluate a model using metrics, such as: classification accuracy/error, confusion matrix, ROC / AOC curves, and loss functions
 
 ### STUDENT PRE-WORK
 *Before this lesson, you should already be able to:*
-
-- Use seaborn to create plots
-- Knowledge of a bootstrap sample
-- Explain the concepts of cross-validation, logistic regression, and overfitting
-- Know how to build and evaluate _some_ classification model in sckit-learn using cross-validation and AUC
-
-
-### INSTRUCTOR PREP
-*Before this lesson, instructors will need to:*
-
-- Remind students about [Final Project, pt. 2](../../projects/final-projects/02-experiment-writeup/readme.md)
-- Copy and modify the [lesson slide deck](./assets/slides/slides-12.md)
-- Read through datasets and starter/solution code
-- Add to the "Additional Resources" section for this lesson
+- Implement a linear model (LinearRegression) with sklearn
+- Define the concept of coefficients
+- Recall metrics for accuracy and misclassification
+- Recall the differences between L1 and L2 regularization
 
 ### LESSON GUIDE
 | TIMING  | TYPE  | TOPIC  |
 |:-:|---|---|
-| 5 min  | [Opening](#opening)  | Objectives & Prep  |
-| 25 min  | [Guided Practice](#guided-practice1)  | Explore the Dataset  |
-| 30 min  | [Introduction](#introduction1)   | Training Decision Trees  |
-| 15 min  | [Guided Practice](#guided-practice2)  | Decision Trees in scikit-learn  |
-| 20 min  | [Demo](#demo)  | Overfitting in Decision Trees   |
-| 15 min  | [Guided Practice](#guided-practice3)  | Adjusting Decision Trees to Avoid Overfitting  |
-| 10 min  | [Introduction](#introduction2)   | Running through the Random Forests  |
-| 20 min  | [Guided Practice](#guided-practice4)  | Regression with Decision Trees & Random Forests  |
-| 25 min  | [Independent Practice](#ind-practice)  | Evaluate Random Forest Using Cross-Validation  |
-| 5 min  | [Conclusion](#conclusion)  | Review & Recap  |
-
----
+| 5 min  | [Opening](#opening) | Discuss lesson objectives, Reviewing Probability |
+| 20-25 mins | [Introduction](#intro-logit) | Intro to Logistic Regression |
+| 10-15 mins | [Demo](#demo-logit)  | Demo of the Sigmoid Function |
+| 10-15 mins | [Guided Practice](#guided-practice-logit)  | Calculating Probabilities given Odds using Sigmoid |
+| 15-20 mins | [Independent Practice](#ind-practice-logit) | Implementing and Practicing Logistic Regression in Sklearn |
+| 20-25 mins | [Introduction](#intro-eval) | Intro to additional classification metrics and the confusion matrix |
+| 10-15 mins | [Guided Practice](#guided-practice-eval) | Determining proper metrics given classification problems |
+| 30-35 mins | [Independent Practice](#ind-practice-eval)  | Optimizing a logistic regression using new metrics  |
+| 5-10 mins | [Conclusion](#conclusion) | Review |
 
 <a name="opening"></a>
-## Opening (5 mins)
+## Opening (5 minutes)
 
-- Review pre-work, projects, or prior exit ticket, if applicable
-- Discuss current lesson objectives
-- Review basics of logistic regression
-- Orient material to the Data Science workflow
+Read through the following questions and brainstorm answers for each:
 
-**Check**: Define the difference between the precision and recall of a model. What are some common components and use cases for logistic regression?
+1. In class, we've covered two different types of algorithms so far: the *linear model* (ordinary least squares, OLS) and *k-nearest neighbors* (KNN). What are the main differences between these two? What is different about how they approach solving the problem?
+    - For example, what is _interpretable_ about OLS compared to what's _interpretable_ in KNN?
 
-#### Review the Data Science Workflow
-In this lesson we will focus on mining the dataset and building a model. We will focus on refining our model for the best predictive ability.
+    > A: OLS is used to solve a continuous regression problem, while KNN is used to solve a categorical problem.
 
-***
+2. What would be the advantage of using a linear model like OLS to solve a classification problem, compared to KNN?
+    - What are some challenges for using OLS to solve a classification problem (say, if the values were either 1 or 0)?
 
-<a name="guided-practice1"></a>
-## Guided Practice: Explore the Dataset (25 mins)
+<a name="intro-logit"></a>
+## Introduction to Logistic Regression
 
-#### The Dataset
-The dataset we will be looking at today is from [StumbleUpon](http://stumbleupon.com). StumbleUpon provides a service to recommend webpages to users, and mostly they would like these websites to be "evergreen".
+Logistic Regression is a _linear_ approach to solving a classification problem. That is, we can use a linear model, similar to Linear Regression, in order so solve if an item _belongs or does not belong_ to a class label.
 
-What are _evergreen_ sites? Evergreen sites are sites that are **always relevant**. As opposed to breaking news or current events, evergreen websites are relevant no matter the time or season. This usually means websites that avoid topical content and focus instead on recipes, how-to guides, or art projects.
+### Challenge! Linear Regression Results for Classification
 
-#### Exercises to Get Started
-We will revisit the data science workflow in order to explore the dataset and determine important characteristics for "evergreen" websites.
+Regression results, as defined, can have a value ranging from negative infinity to infinity. However, not all regression problems will use that entire range. For example, imagine predicting a football player's salary: it wouldn't be negative, and while it would be high, there is an eventual cap.
 
-In a group:
+Classification is used when the predicted values (class labels) are not necessarily greater or less than each other. Logically this makes sense, but since most classification problems are binary (0 or 1), and 1 is technically greater than 0... wouldn't it make sense to apply the concept of a regression to solve classification? How could we contain those bounds?
 
-1. Prior to looking at the available data, brainstorm 3 - 5 characteristics that would be useful for predicting evergreen websites.
+Below, we'll review some approaches to regression that will show us how to apply it to classification problems.
 
-2. After looking at the dataset, can you model or quantify any of the characteristics you wanted?
-    - For instance, if you believe high-image content websites are likely to be evergreen, then how would you build a feature that represents high image content?
-    - Or if you believe weather content ISN'T likely to be evergreen, then how would you build a feature to reflect that?
+### Fix 1: Probability
 
-        * _See notebook for data dictionary_
-        * _See notebook for starter code for exercises_
+One approach is to predict the probability that an observation belongs to a certain class. We could assume that the _prior_ probability (or the _bias_) of a class is the class distribution.
 
-3. Does being a news site affect "evergreen-ness"? Compute or plot the percent of evergreen news sites.
-4. Does category in general affect evergreen-ness? Plot the rate of evergreen sites for all Alchemy categories.
-5. How many articles are there per category?
-6. Create a feature for the title containing "recipe". Is the % of evergreen websites higher or lower on pages that have "recipe" in the the title?
+For example, if we know that roughly 700 people from the Titanic survived out of 2200 total, then without knowing anything about the passengers and crew, the probability of survival would be ~0.32 (32%). However, we still need a way to use a linear function to either increase or decrease the probability of an individual, given any additional data we know about them.
 
-**Check:** Were you able to plot the requested features? Can you explain how you would approach this type of dataset?
+**Check**: This prior probability is most similar to which value in the ordinary least squares formula?
 
-***
+> Answer: Alpha, or the y-intercept
 
-<a name="introduction1"></a>
-## Introduction: Training Decision Trees (30 mins)
+### Fix 2: Link Functions and the Sigmoid Function
 
-#### Intuition
-Decisions trees are similar to the game 20 questions. They make predictions by answering a series of questions, most often yes or no questions.  What we typically want is the smallest set of questions to get to the right answer. We want each question to reduce our search space as much as possible.
+![logistic fit vs linear regression fit](./assets/images/log_vs_ols.jpg)
 
-_Trees_ are a data structure made up of _nodes_ and _branches_. Each node typically has two (or more) branches that connect it to it's children. Each child is another node in the tree and contains it's own _subtree_. Nodes without any children are known as _leaf_ nodes.
+Another advantage to Ordinary Least Squares is that it allows for _generalized_ models using a _link_ function. Link functions allow us to build a relationship between a linear function and the mean of a distribution.
 
-A _decision tree_ contains a question at every node. Depending on the answer to that question, we will proceed down the left or right branch of the tree and ask another question. Once we don't have any more questions at the _leaf_ nodes, we make a prediction.
+**Check**: What was the distribution most aligned with OLS/Linear Regression?
 
-It's important to note the next question we ask is always dependent on the last.  We'll see how this sets decision trees apart from previous models. For example, suppose we want to predict if an article is a news article. We may start by asking: does it mention a President?
+> Answer: The Normal Distribution
 
-- If it does, it must be a news article
-- If not, let's ask another question - does the article contain other political figures?
-- If not, does the article contain references to political topics?
-- Etc
+For classification, we need a distribution associated for categories: the probability of a given event, given all events. The link function that best allows for this is the _logit_ function, which is the inverse of the _sigmoid_ function.
 
-**Check**: Using our dataset from earlier, try to predict whether a given article is evergreen.
+We'll start with sigmoid function. A _sigmoid function_, quite simply, is a function that visually looks like an s. While it serves many purposes, a sigmoid function is useful in logistic regression.
 
-#### Comparison to previous models
-Decision trees have an advantage over logistic regression by being _non-linear_. A _linear_ model is one in which a change in an input variable has a constant change on the output variable.
+Our sigmoid function is defined mathematically as:
 
-An example of this difference is the relationship between years of education and salary. We know that as education increases, salary should as well. A linear model would say this effect is constant.  As your years of education goes from 10 to 15 years or 15 to 20 years, the corresponding increase in salary would be about the same. A _non-linear_ model allows us to change the effect depending on the input. For instance, with a non-linear model you could show how the relationship of education to salary changes dramatically from 0-15 years, but negligibly from years 15-20.
+`1 / 1 + e^-t`
 
-Additionally, trees automatically contain interactions of features. Since each question is dependent on the last, the features are naturally interacting.
+Recall that `e` is the inverse of the natural log. As t increases/decreases, the result is closer to 1 or 0. When t = 0, the result would be 0.5.
 
-**Check**: Why do decision trees have an advantage over logistic regression?
+Since `t` decides how much to increase or decrease the value away from 0.5, `t` can help with interpretation when solving for something like a coefficient. But in its current form, it is not as useful.
 
-#### Training a Decision Tree Model
-Training a decision tree is about deciding on the best set of questions to ask. A good question will be one that best segregates the positive group from the negative group and then narrows in on the correct answer. For example, in our toy problem of classifying news stories, the best question we can ask is one that creates 2 groups, one that is mostly news stories and on that is mostly non-news stories.
+<a name="demo-logit"></a>
+### Demo: What does the Sigmoid Function look like on a chart?
 
-Like all data science techniques, we need to quantify this segregation.  We can do so with any of the following metrics:
+Use the sigmoid function above (`1 / 1 + e^-t`) with values of `t` between -6 and 6 and chart in on a graph. Do this by hand or write some python code to evaluate it (`e = 2.71`). Do we get the s shape we expect?
 
-- [Classification Error]
-- [Entropy]
-- [Gini](https://en.wikipedia.org/wiki/Gini_coefficient)
+### Fix 3: Odds and Log-Odds
 
-Each of these measures the _purity_ of the separation. Classification error asks: what percent are positive in each group? The lowest error would be a separation that has 100% positive in one group and 0% in the other (completely separating news stories from non-news stories.)
+As mentioned above, the _logit_ function is the inverse of the _sigmoid_ function, and acts as our _link_ function. Mathematically it's represented as:
 
-When training, we want to choose the question that gives us the best _change_ in our purity measure. Given our current set of data points (articles), you could ask: what question will make the largest change in purity?
+`ln(p / (1 - p))`
 
-At each training step, we take our current set and choose the best feature to split (in other words, the best question to ask) based on information gain. After splitting, we then have two new groups. This process is next repeated _recursively_ for each of those two groups.
+Here, the value within the natural log (`p / (1 - p)`) represents _odds_. Taking the natural log of odds generates _log odds_ (hence, logit).
 
-Let's build a sample tree for our evergreen prediction problem. Assume our features are:
+The beauty of the logit function is that it allows for values between negative infinity and infinity, but provides us probabilities between 0 and 1.
 
-- Whether the article contains a recipe
-- The image ratio
-- The html ratio
+**Check:** Why is this important? What does this remind us of?
 
-First, we want to choose the feature the gives us the highest purity. In this case, we choose the recipe feature.
+For example, a logit value (log odds) of .2 (or odds of ~1.2/1):
 
-![](./assets/images/single-node-tree.png)
+`0.2 = ln(p / (1 -p))` ()
 
-Then, we take each side of the tree and repeat the process, choosing the feature that best splits the remaining samples.
+with a mean probability of 0.5, means the adjusted probability would be _about_ 0.55:
 
-![](./assets/images/depth-2-tree.png)
+`1 / (1 + e^-.2)` (python: `1 / (1 + numpy.exp(-0.2)`)
 
-As you can see the best feature is different on both sides of this tree, which shows the interaction of features. If the article does not contain 'recipe', then we care about the image_ratio, but otherwise we don't.
+While the logit value (log odds) represents the _coefficients_ in the logistic function, we can convert them into odds ratios that would be more easily interpretable.
 
-We can continue that process until we have asked as many questions as we want or until our leaf nodes are completely pure.
+It's through these coefficients that we gain our overall probability: the logistic regression draws a linear decision line which solves if an observation belongs in one class or another:
 
-#### Making predictions from a Decision Tree
-Predictions are made in the decision tree from answering each of the questions. Once we reach a leaf node, our prediction is made by taking the majority label of the training samples that fulfill the questions. If there are 10 training samples that match our new sample, and 6 are positive, we will predict positive since 6/10 (60%) are positive.
+![](./assets/images/decision_lines.png)
 
-In the sample tree, if we want to classify a new article, we can proceed by first asking - does the article contain the word recipe? If it doesn't, we can check: does the article have a lot of images? If it does, 630 / 943 articles are evergreen - so we can assign a 0.67 probability for evergreen sites.
 
-**Check**: How do we classify a new article? How do we make predictions from a decision tree?
+<a name="guided-practice-logit"></a>
+## Guided Practice: Wager these odds!
 
-***
+Given the odds below for some football games, use the _logit_ function and the _sigmoid_ function to solve for the _probability_ that the "better" team would win.
 
-<a name="guided-practice2"></a>
-## Guided Practice: Decision Trees in scikit-learn (15 mins)
+You'll first want to write two python functions:
 
-#### Training a Model in sckit-learn
+```python
+def logit_func(odds):
+    # uses a float (odds) and returns back the log odds (logit)
+    return None
 
-In your groups from earlier, work on evaluating the decision tree using cross-validation methods. What metrics would work best? Why?
+def sigmoid_func(logit):
+    # uses a float (logit) and returns back the probability
+    return None
 
-**Check:** Are you able to evaluate the decision tree model using cross-validation methods?
+```
 
+1. Stanford : Iowa, 5:1
+2. Alabama : Michigan State, 20:1
+3. Clemson : Oklahoma, 1.1:1
+4. Houston : Florida State, 1.8:1
+5. Ohio State : Notre Dame, 1.6:1
 
-<a name="demo"></a>
-## Demo: Overfitting in Decision Trees (20 mins)
 
-Decision trees tend to be weak models because they can memorize or overfit to a dataset.  Remember, a model is _overfit_ when it instead of picking up on general trends in the data, it memorizes or bends to a few specific examples. If we simply memorized each article and it's classification, our model would overfit. This is like using every word in every article as a feature.
+<a name="ind--practice-logit"></a>
+## Independent Practice: Logistic Regression Implementation
 
-For instance, revisiting our previous example, we might ask questions like:
+Use the data `collegeadmissions.csv` and the [Logistic Regression](http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html) estimator in sklearn in order to predict the target variable `admit`. Your objectives are:
 
-- Is the first word 'The'?
-- Is the second word 'president'
-- Is the third word 'of'
-- etc.
+1. What is the bias, or prior probability, of the dataset?
+2. Build a simple model with one feature and explore the `coef_` value: does this represent the odds, or logit (log odds)?
+3. Build a more complicated model using multiple features. Interpreting the odds, which features have the most impact on admission rate? Which features have the least?
+4. Report back on the accuracy of your model.
 
-This model is attempting to recreate the articles exactly as opposed to learning a general trend. An unconstrained decision tree can learn a fairly extreme tree:
 
-![](./assets/images/complex-tree-min.png)
+<a name="intro-eval"></a>
+## Introduction: Advanced Classification Metrics: Precision, Recall, AUC.
 
-We can limit this function in decision trees using a few methods:
+Accuracy is only one of several metrics used when solving for a classification problem. It is best defined as `total predicted correct / total data set`. But accuracy alone isn't always usable.
 
-  - Limiting the number of questions (nodes) a tree can have
-  - Limiting the number of samples in the leaf nodes
+For example, if we know a prediction is 75% accurate, accuracy doesn't provide any insight into why the 25% was wrong. Was it wrong _equally_ across all class labels? Did it just guess one class label for all predictions and 25% of the data was just the other label?
 
-**Check:** Why are decision trees generally thought of as weak models? How can we limit our decision trees?
+It's important to look at other metrics to fully understand the problem.
 
-***
+![confusion_matrix](https://github.com/podopie/DAT18NYC/raw/83dc789584a3349096988bbe14ffd7b87acef5e8/classes/img/confusion_matrix_metrics.png)
 
-<a name="guided-practice3"></a>
-## Guided Practice: Adjusting Decision Trees to Avoid Overfitting (15 minutes)
+We can split up the accuracy of each label by using _True Positive Rate_ and _False Positive Rate_.
 
-Control for overfitting in the decision model by adjusting one of the following parameters:
+- **True Positive Rate (TPR)**: Out of all of the target class labels, how many were accurately predicted to belong to that class?
+    - Real world example: Given a medical exam that tests for cancer, how often does it correctly identify patients with cancer?
 
-- `max_depth`: Control the maximum number of questions
-- `min_samples_in_leaf`: Control the minimum number of records in each node
+- **False Positive Rate (FPR)**: The inverse of TPR. Out of all items not belonging to a class label, how many were predicted as belonging to the target class label?
+    - Real world example: Given a medical exam that tests for cancer, how often does it trigger a "false alarm" by saying a patient has cancer when they actually don't?
 
-**Check:** Were students able to adjust the model using the parameters?
+Likewise, this can be inverted: how often does a test _correctly_ identify patients without cancer, and how often does a test _incorrectly_ identify patients as being cancer-free when they might actually have cancer! By building on true positive and false positive rates, you can get a much clearer picture of where predictions begin to fall apart.
 
-***
+A good classifier would have a true positive rate approaching 1, and a false positive rate approaching 0. In a binary problem (say, predicting if someone smokes or not), it would accurately predict _all_ of the smokers as smokers, and not accidentally predict any of the nonsmokers as smokers.
 
-<a name="introduction2"></a>
-## Introduction: Running through the Random Forests (10 min)
+Logically, we like single numbers for optimizing, so we can use a metric called Area Under the Curve (AUC), which summarizes the impact of TPR and FPR in one single value. This is also called the Receiver Operating Characteristic (ROC). ROC/AUC is a measure of area under a curve that is described by the TPR and FPR.
 
-Random Forests are some of the most widespread classifiers used.  They are relatively simple to use because they require very few parameters to set and make it easy to avoid overfitting.
+![](http://scikit-learn.org/stable/_images/plot_roc_001.png)
 
-Random Forests are an _ensemble_ or collection of decision trees.
+Using the logic of TPR and FPR above:
 
-**Advantages:**
+1. If we have a TPR of 1 (all positives are marked positive) and an FPR of 0 (all negatives are not marked positive), we'd have an AUC of 1. This means everything was accurately predicted.
+2. If we have a TPR of 0 (all positives are not marked positive) and an FPR of 0 (all negatives are marked positive), we'd have an AUC of 0. This means nothing was predicted accurately.
+3. An AUC of .5 would suggest randomness (somewhat), and is an excellent benchmark to use for prediction (is my AUC above .5?)
 
-- Easy to tune, built-in protection against overfitting, no regularization
-- Non-linear
-- Built-in interaction effects
+Keep in mind that sklearn has all of these metrics on [one handy page](http://scikit-learn.org/stable/modules/classes.html#sklearn-metrics-metrics).
 
-**Disadvantages:**
 
-- Slow
-- Black-box
-- No "coefficients", we don't know what positively or negatively impacts a website being evergreen
+<a name="guided-practice-eval"></a>
+## Guided Practice: How to decide which metric to use?
 
-#### Training a Random Forest
+While AUC seems like a nice "golden standard" for evaluating binary classification, it could be _further_ improved, depending on your classification problem. There will be instances where error in positives vs negative matches will be very important.
 
-Training a Random Forest model involves training many decision tree models. Since decision trees overfit very easily, we use many decision trees together and randomize the way they are created.
+For each of the following examples:
 
-1. Take a bootstrap sample of the dataset
-2. Train a decision tree on the bootstrap sample
-2a. For each split/feature selection, only evaluate a _limited_ number of features to find the best one.
-3. Repeat this for _N_ trees
+1. Write a confusion matrix: true positive, false positive, true negative, false negative. Then decide what each square represents for that specific example.
+2. Define the _benefit_ of a true positive and true negative.
+3. Define the _cost_ of a false positive and false negative.
+4. Determine at what point does the cost of a failure outweigh the benefit of a success? This would help you decide how to optimize TPR, FPR, and AUC.
 
-#### Predicting using a Random Forest
-Predictions from a Random Forest come from each decision tree.  Each tree makes an individual prediction. The individual predictions are combined in a majority vote.
+**Examples**
 
-***
+1. A test is developed for determining if a patient has cancer or not
+2. A newspaper company is targeting a marketing campaign for "at risk" users that may stop paying for the product soon.
+3. You build a spam classifier for your email system.
 
-<a name="guided-practice4"></a>
-## Guided Practice: Regression with Decision Trees & Random Forests (20 mins)
-> See iPython notebook for starter and solution code
 
-#### Random Forest in scikit-learn
-Your new goal is to build a random forest model to predict the evergreen-ness of a website, using our existing dataset.
+<a name="ind-practice-eval"></a>
+## Independent Practice: Evaluating Logistic Regression with Alternative Metrics
 
-* The key parameter to remember is `n_estimators` or the number of trees to use in the model.
+[Kaggle's common online exercise](https://www.kaggle.com/c/titanic) is exploring survival data from the Titanic.
 
-#### Retrieving the important aspects of the model
-Random Forests have a good way of extracting what features are important. Unlike Logistic Regression, we don't have coefficients that tell us whether some input positively or negatively affects our output. But we can keep track of which inputs are most important. We do this by keeping track of the features give us the best splits.
+**Learning Goals**:
 
-#### Regression with Decision Trees and Random Forests
-The same models, both decision trees and random forests can be used for both classification and regression. While predictions for classification problems are made by predicting the majority class in the leaf node, in regression, predictions are made by predicting the average value of the samples in the leaf node.
+1. Spend a few minutes determining which data would be most important to use in the prediction problem. You may need to create new features based on the data available. Consider using a feature selection aide in sklearn. For a worst case scenario, identify one or two strong features that would be useful to include in this model.
 
-**Check:** By this point, you should be able to adjust the given model using the `n_estimators` parameter.
+2. Spend 1-2 minutes considering which _metric_ makes the most sense to optimize. Accuracy? FPR or TPR? AUC? Given the business problem of understanding survival rate aboard the Titanic, why should you use this metric?
 
-***
-
-## Independent Practice: Evaluate Random Forest Using Cross-Validation (25 minutes)
-> Use the iPython notebooks for [starter](./code/starter-code/starter-code-12.ipynb) and [solution](./code/solution-code/solution-code-12.ipynb) code in this section
-
-1. Continue adding input variables to the model that you think may be relevant
-2. For each feature:
-  - Evaluate the model for improved predictive performance using cross-validation
-  - Evaluate the _importance_ of the feature
-  -
-3. **Bonus**: Just like the 'recipe' feature, add in similar text features and evaluate their performance.
-
-**Check:** Each student should improve on their original model (in AUC) either by increasing the size of the model or adding in additional features.
-
-***
+3. Build a tuned Logistic model. Be prepared to explain your design (including regularization), metric, and feature set in predicting survival using any tools necessary (such as a fit chart). Use the [starter code](./code/starter-code/starter-code-9.ipynb) to get you going.
 
 <a name="conclusion"></a>
-## Conclusion (5 mins)
+### Review
 
-#### Review Q&A
-
-1. What are decision trees?
-    - Decision trees are non-linear models that can be used for classification or regression.
-
-2. What does training involve?
-    - Training means using the data to decide the best questions to separate the data into our two classes. Predictions are then made by answering those questions.
-
-3. What are some common problems with Decision Trees?
-    - Decision trees are typically weak models and overfit very easily
-
-4. What are Random Forests?
-    - Random forests are collections of decision trees and are much more powerful models
-
-5. What are some common problems with Random Forests?
-    - While they are very good predictive models, they are more often a black-box and lack the explanatory features of linear/logistic regression
+1. What's the link function used in logistic regression?
+2. What kind of machine learning problems does logistic regression address?
+3. What do the _coefficients_ in a logistic regression represent? How does the interpretation differ from ordinary least squares? How is it similar?
+4. How does True Positive Rate and False Positive Rate help explain accuracy?
+5. What would an AUC of 0.5 represent for a model? What about an AUC of 0.9?
+6. Why might one classification metric be more important to tune than another? Give an example of a business problem or project where this would be the case.
 
 ***
 
 ### BEFORE NEXT CLASS
 |   |   |
 |---|---|
-| **UPCOMING PROJECTS**  | [Final Project, Deliverable 2](../../projects/final-projects/02-experiment-writeup/readme.md)  |
+| **DUE TODAY**  | [Project 3](../../projects/unit-projects/project-3/readme.md)  |
 
 ### ADDITIONAL RESOURCES
-- Add your own resources.
-- Go crazy.
-- So much room for bullets!
+
+- Go crazy!
+- Add your own!

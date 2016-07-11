@@ -31,11 +31,11 @@ The repository to upload projects can be found here: https://github.com/ga-stude
 | 6 | 7/11 | [Decision Trees and Random Forests](./lessons/lesson-11) | |
 | 6 | 7/13 | [Introduction to Logistic Regression](./lessons/lesson-12) | |
 | | | **Unit 3 - Data Science in the Real World** | |
-| 7 | 7/18 | [Advanced Metrics and Communicating Results](./lessons/lesson-10) | **[Unit Project 3](./unit-projects/3) due** |
-| 7 | 7/20 | Natural Language Processing and Text Classification | **[Final Project 3](./final-project/3) due** |
+| 7 | 7/18 | [Advanced Metrics and Communicating Results](./lessons/lesson-10) | **[Final Project 2 Due](./projects/final-projects/3) due** |
+| 7 | 7/20 | Natural Language Processing and Text Classification | **[Unit Project 3 Due](./projects/unit-projects/2) due** |
 | 8 | 7/25 | Latent Variables and Natural Language Processing | |
 | 8 | 7/27 | Time Series Data | **[Unit Project 4](./unit-projects/4) due** |
-| 9 | 8/1 | Introduction to Databases | **[Final Project 4](./final-project/4) due** |
+| 9 | 8/1 | Introduction to Databases | **[Final Project 3](./final-project/3) due** |
 | 9 | 8/3 | Wrapping Up and Next Steps | |
 | 10 | 8/8 | Final Project Presentations | **[Final Project 5](./final-project/5) due** |
 | 10 | 8/10 | Final Project Presentations, Part 2 | |
