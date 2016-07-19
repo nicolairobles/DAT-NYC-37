@@ -1,313 +1,466 @@
 ---
-title: Decision Trees and Random Forests
+title: Latent Variable NLP
 duration: "3:00"
 creator:
     name: Arun Ahuja
     city: NYC
 ---
 
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Decision Trees & Random Forests
-DS | Lesson 12
+
+# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Latent Variables and Natural Language Processing
+DS | Lesson 14
 
 ### LEARNING OBJECTIVES
 *After this lesson, you will be able to:*
 
-- Understand and build decision tree models for classification and regression
-- Understand the differences between linear and non-linear models
-- Understand and build random forest models for classification and regression
-- Know how to extract the most important predictors in a random forest model
-
+- Understand what _latent_ variables are
+- Understand the uses of _latent variables_ in language processing
+- Use the _word2vec_ and _LDA_ algorithms of `gensim`
 
 ### STUDENT PRE-WORK
 *Before this lesson, you should already be able to:*
 
-- Use seaborn to create plots
-- Knowledge of a bootstrap sample
-- Explain the concepts of cross-validation, logistic regression, and overfitting
-- Know how to build and evaluate _some_ classification model in sckit-learn using cross-validation and AUC
-
+- Install `gensim` with `pip install gensim`
+- Recall and apply _unsupervised learning_ techniques
+- Recall probability distributions, specifically discrete multinomial distributions
+- Recall NLP essentials, including experience with `spacy`
+- _BONUS_: If you are interested in accessing the Twitter API, you'll need to setup Twitter API credentials. [Here are instructions](./code/twitter-instructions.md)
 
 ### INSTRUCTOR PREP
 *Before this lesson, instructors will need to:*
 
-- Remind students about [Final Project, pt. 2](../../projects/final-projects/02-experiment-writeup/readme.md)
-- Copy and modify the [lesson slide deck](./assets/slides/slides-12.md)
-- Read through datasets and starter/solution code
+- Review [Final Project, pt. 3](../../projects/final-projects/03-exploratory-analysis/readme.md)
+- Copy and modify the [lesson slide deck](./assets/slides/slides-14.md)
+- Read through the starter/solution code.
+- Pull the "stumbleupon" dataset from Lesson 13.
 - Add to the "Additional Resources" section for this lesson
+- Setup Twitter API credentials for accessing and receiving tweets. Instructions [can be found here](./code/twitter-instructions.md)
+
+> Note: The demo and starter code for this lesson is written in Python 3.4, not 2.7. This bug fix has been flagged and will be patched shortly. In the meantime, please reload Anacondas for Python 3.4 to correctly run the code for this lesson.
 
 ### LESSON GUIDE
 | TIMING  | TYPE  | TOPIC  |
 |:-:|---|---|
-| 5 min  | [Opening](#opening)  | Objectives & Prep  |
-| 25 min  | [Guided Practice](#guided-practice1)  | Explore the Dataset  |
-| 30 min  | [Introduction](#introduction1)   | Training Decision Trees  |
-| 15 min  | [Guided Practice](#guided-practice2)  | Decision Trees in scikit-learn  |
-| 20 min  | [Demo](#demo)  | Overfitting in Decision Trees   |
-| 15 min  | [Guided Practice](#guided-practice3)  | Adjusting Decision Trees to Avoid Overfitting  |
-| 10 min  | [Introduction](#introduction2)   | Running through the Random Forests  |
-| 20 min  | [Guided Practice](#guided-practice4)  | Regression with Decision Trees & Random Forests  |
-| 25 min  | [Independent Practice](#ind-practice)  | Evaluate Random Forest Using Cross-Validation  |
-| 5 min  | [Conclusion](#conclusion)  | Review & Recap  |
+| 5 min  | [Opening](#opening)  | Latent Variable Models |
+| 50 mins  | [Introduction](#introduction-nlp)   |  Latent Variables In Text Processing  |
+| 30 mins  | [Demo](#demo-lda)  | Latent Dirichlet Allocation in gensim |
+| 20 mins  | [Introduction](#introduction-word2vec)   | word2vec  |
+| 20 mins  | [Demo](#demo-word2vec)  | word2vec in gensim |
+| 45 mins  | [Independent Practice](#ind-practice)  | Twitter Lab  |
+| 10 mins  | [Conclusion](#conclusion)  | Lesson Review  |
 
 ---
 
-<a name="opening"></a>
-## Opening (5 mins)
+<a name="Opening"></a>
+## Opening
 
-- Review pre-work, projects, or prior exit ticket, if applicable
-- Discuss current lesson objectives
-- Review basics of logistic regression
-- Orient material to the Data Science workflow
+This lesson will continue on natural language processing with an emphasis on _latent variable models_.
 
-**Check**: Define the difference between the precision and recall of a model. What are some common components and use cases for logistic regression?
+In our data science workflow, we will often be MINING datasets with a large amount of text or unstructured data. In our last class, we saw many techniques for MINING this data, including pre-processing and building linguistic rules to uncover patterns. We could also create _classifiers_ from this unstructured data. In this class, we'll continue with methods for MINING or REFINING our understanding of text data by attempting to uncover structure or organization inherent in the text.
 
-#### Review the Data Science Workflow
-In this lesson we will focus on mining the dataset and building a model. We will focus on refining our model for the best predictive ability.
+Many of the advances in natural language processing have been about using data to learn the rules of grammar and language and then using those tools to extract information or build classification algorithms from the text. We saw these tools in our last class, including:
 
-***
+- _Tokenization_ to break apart pieces of text
+- _Stemming_ or _lemmatization_ to understand bases or roots of words
+- _Parsing_ and _tagging_ to understand each piece of the sentences.
 
-<a name="guided-practice1"></a>
-## Guided Practice: Explore the Dataset (25 mins)
+Each of these are based on a classical or theoretical understanding of language - essentially, attempting to re-create the rules that guide language.
 
-#### The Dataset
-The dataset we will be looking at today is from [StumbleUpon](http://stumbleupon.com). StumbleUpon provides a service to recommend webpages to users, and mostly they would like these websites to be "evergreen".
+_Latent variable models_ are different in that instead of attempting to recreate rules of language, we'll try to understand language based on **how** the words are used. For example, we won't attempt to learn that 'bad' and 'badly' are related because they share the same root, but instead we'll determine that they are related because they are often used in the same way often or near the same words.
 
-What are _evergreen_ sites? Evergreen sites are sites that are **always relevant**. As opposed to breaking news or current events, evergreen websites are relevant no matter the time or season. This usually means websites that avoid topical content and focus instead on recipes, how-to guides, or art projects.
+We'll use _unsupervised_ learning techniques (discovering patterns or structure) to extract the information.
 
-#### Exercises to Get Started
-We will revisit the data science workflow in order to explore the dataset and determine important characteristics for "evergreen" websites.
+Rather than inferring that 'Python' and 'C++' are both programming languages because they are often a noun preceded by the verb 'program' or 'code', we'll infer a category by identifying that they are often used in the same way. We won't need to guide them with particular phrases to look for parts of speech.
 
-In a group:
 
-1. Prior to looking at the available data, brainstorm 3 - 5 characteristics that would be useful for predicting evergreen websites.
+<a name="introduction-nlp"></a>
+## Introduction: Latent Variable Models (55 mins)
 
-2. After looking at the dataset, can you model or quantify any of the characteristics you wanted?
-    - For instance, if you believe high-image content websites are likely to be evergreen, then how would you build a feature that represents high image content?
-    - Or if you believe weather content ISN'T likely to be evergreen, then how would you build a feature to reflect that?
+_Latent variable models_ are models in which we assume that the data we are observing has some hidden, underlying structure that we can't see, and which we'd like to learn. These hidden, underlying structure are the _latent_ variables we want our model to understand.
 
-        * _See notebook for data dictionary_
-        * _See notebook for starter code for exercises_
+Text processing is a common application of latent variable models. Again, in the classical sense we know that language is built by a set of pre-structured grammar rules and vocabulary; however, we also we know that we break those rules pretty often and create new words that get added into our vocabulary (see: selfie).
 
-3. Does being a news site affect "evergreen-ness"? Compute or plot the percent of evergreen news sites.
-4. Does category in general affect evergreen-ness? Plot the rate of evergreen sites for all Alchemy categories.
-5. How many articles are there per category?
-6. Create a feature for the title containing "recipe". Is the % of evergreen websites higher or lower on pages that have "recipe" in the the title?
+Instead of attempting to learn the rules of 'proper' grammar, we instead look to uncover the hidden structure and ignore preexisting rules (which might not even describe our syntax anyway). Sometimes, the hidden structure we uncover _are_ the basic rules of our language, but sometimes they may also unveil something new.
 
-**Check:** Were you able to plot the requested features? Can you explain how you would approach this type of dataset?
+These techniques are commonly used for recommending news articles or mining large troves of data data and trying to find commonalities. Topic modeling, a method we will discuss in today's class, is used in the [NY times recommendation engine](http://open.blogs.nytimes.com/2015/08/11/building-the-next-new-york-times-recommendation-engine/?_r=0). They attempt to map their articles to a latent space (or underlying structure) of topics using the content of the article.
 
-***
+![Frick Museum](./assets/images/frick_museum2.png)
 
-<a name="introduction1"></a>
-## Introduction: Training Decision Trees (30 mins)
+[Lyst](http://developers.lyst.com/2014/11/11/word-embeddings-for-fashion/), an online fashion retailer, uses latent representations of clothing descriptions to find similar clothing. If we can map phrases like 'chelsea boot' or 'felted hat' to some underlying structure, we can use that new structure to find similar products.
 
-#### Intuition
-Decisions trees are similar to the game 20 questions. They make predictions by answering a series of questions, most often yes or no questions.  What we typically want is the smallest set of questions to get to the right answer. We want each question to reduce our search space as much as possible.
 
-_Trees_ are a data structure made up of _nodes_ and _branches_. Each node typically has two (or more) branches that connect it to it's children. Each child is another node in the tree and contains it's own _subtree_. Nodes without any children are known as _leaf_ nodes.
+### Dimensionality Reduction in Text Representation
 
-A _decision tree_ contains a question at every node. Depending on the answer to that question, we will proceed down the left or right branch of the tree and ask another question. Once we don't have any more questions at the _leaf_ nodes, we make a prediction.
+Our previous 'representation' of a set of text documents (articles) for classification was a matrix with one row per document and one column per word (or _n-gram_).
 
-It's important to note the next question we ask is always dependent on the last.  We'll see how this sets decision trees apart from previous models. For example, suppose we want to predict if an article is a news article. We may start by asking: does it mention a President?
+![Word Factorization Matrix](./assets/images/word-matrix-factorization.png)
 
-- If it does, it must be a news article
-- If not, let's ask another question - does the article contain other political figures?
-- If not, does the article contain references to political topics?
-- Etc
+While this does sum up most of the information, it does drop a few things - mostly structure and order. Additionally, many of the columns may be dependent on each other (or correlated).
 
-**Check**: Using our dataset from earlier, try to predict whether a given article is evergreen.
+For example, an article that contains the word 'IPO' is also likely to contain the work 'stock' or 'NASDAQ'.  Therefore, those columns are repetitive and both of those columns likely represent the same 'concept' or idea. For classification, we may not care if the document has the word 'IPO' or 'NASDAQ' or 'stocks', but just that it has financial-related words.
 
-#### Comparison to previous models
-Decision trees have an advantage over logistic regression by being _non-linear_. A _linear_ model is one in which a change in an input variable has a constant change on the output variable.
+One way to do this is with regularization - `L1` or `lasso` regularization tends to remove repetitive features by bringing their learned coefficients to 0.
 
-An example of this difference is the relationship between years of education and salary. We know that as education increases, salary should as well. A linear model would say this effect is constant.  As your years of education goes from 10 to 15 years or 15 to 20 years, the corresponding increase in salary would be about the same. A _non-linear_ model allows us to change the effect depending on the input. For instance, with a non-linear model you could show how the relationship of education to salary changes dramatically from 0-15 years, but negligibly from years 15-20.
+Another is to perform `dimensionality reduction` - where we first identify the correlated columns and then replace them with a column that represents the concept they have in common. For instance, we could replace the 'IPO', 'stocks', and 'NASDAQ' column with a single - 'HasFinancialWords' column.
 
-Additionally, trees automatically contain interactions of features. Since each question is dependent on the last, the features are naturally interacting.
+There are many techniques to do this automatically and most follow a very similar approach:
 
-**Check**: Why do decision trees have an advantage over logistic regression?
+1. Identify correlated columns
+2. Replace them with a new column that encapsulates the others
 
-#### Training a Decision Tree Model
-Training a decision tree is about deciding on the best set of questions to ask. A good question will be one that best segregates the positive group from the negative group and then narrows in on the correct answer. For example, in our toy problem of classifying news stories, the best question we can ask is one that creates 2 groups, one that is mostly news stories and on that is mostly non-news stories.
+The techniques vary in how they define correlation and how much of the relationship between the original and new columns you need to save.
 
-Like all data science techniques, we need to quantify this segregation.  We can do so with any of the following metrics:
+There are many dimensionality techniques built into `scikit-learn`. One of the most common is **PCA** or **Principal Components Analysis**. Like most of the models we've seen, dimensionality techniques can vary between _linear_ or _non-linear_, meaning that they pick up linear or non-linear correlations between columns.
 
-- [Classification Error]
-- [Entropy]
-- [Gini](https://en.wikipedia.org/wiki/Gini_coefficient)
+**PCA** when applied to text data is sometimes known as **LSI** or **Latent Semantic Indexing**.
 
-Each of these measures the _purity_ of the separation. Classification error asks: what percent are positive in each group? The lowest error would be a separation that has 100% positive in one group and 0% in the other (completely separating news stories from non-news stories.)
+### Mixture Models and Language Processing
 
-When training, we want to choose the question that gives us the best _change_ in our purity measure. Given our current set of data points (articles), you could ask: what question will make the largest change in purity?
+Mixture models (and specifically **LDA** or **Latent Dirichlet Allocation**) take this concept further and generate more structure around the documents. Instead of just replacing correlated columns, we create clusters of common words and generate probability distributions to explicitly state how related words are.
 
-At each training step, we take our current set and choose the best feature to split (in other words, the best question to ask) based on information gain. After splitting, we then have two new groups. This process is next repeated _recursively_ for each of those two groups.
+To understand this better, let's imagine a new way to generate text:
 
-Let's build a sample tree for our evergreen prediction problem. Assume our features are:
+1. Start writing a document
+    1. First choose a topic (sports, news, science)
+        1. Choose a word from that topic
+    2. Repeat
+2. Repeat for the next document
 
-- Whether the article contains a recipe
-- The image ratio
-- The html ratio
+What this 'model' of text is assuming is that each document is some _mixture_ of topics. It may be mostly science, but may contain some business information. The _latent_ structure we want to uncover are the topics (or concepts) that generated that text.
 
-First, we want to choose the feature the gives us the highest purity. In this case, we choose the recipe feature.
+![Latent Dirichlet Allocation](./assets/images/lda-mixture-graphic.jpg)
 
-![](./assets/images/single-node-tree.png)
+_Latent Dirichlet Allocation_ is a model that assumes this is the way text is generated and then attempts to learn two things:
 
-Then, we take each side of the tree and repeat the process, choosing the feature that best splits the remaining samples.
+    1. What is the _word distribution_ of each topic?
+    2. What is the _topic distribution_ of each document?
 
-![](./assets/images/depth-2-tree.png)
+The _word distribution_ is a multinomial distribution for each topic representing what words are most likely from that topic.
 
-As you can see the best feature is different on both sides of this tree, which shows the interaction of features. If the article does not contain 'recipe', then we care about the image_ratio, but otherwise we don't.
+Let's say we have 3 topics: sports, business, science.
+For each topic, we uncover the words most likely to come from them:
 
-We can continue that process until we have asked as many questions as we want or until our leaf nodes are completely pure.
+```
+sports: [football: 0.3, basketball: 0.2, baseball: 0.2, touchdown: 0.02 ... genetics: 0.0001]
 
-#### Making predictions from a Decision Tree
-Predictions are made in the decision tree from answering each of the questions. Once we reach a leaf node, our prediction is made by taking the majority label of the training samples that fulfill the questions. If there are 10 training samples that match our new sample, and 6 are positive, we will predict positive since 6/10 (60%) are positive.
+science: [genetics: 0.2, drug: 0.2, ... baseball: 0.0001]
 
-In the sample tree, if we want to classify a new article, we can proceed by first asking - does the article contain the word recipe? If it doesn't, we can check: does the article have a lot of images? If it does, 630 / 943 articles are evergreen - so we can assign a 0.67 probability for evergreen sites.
+business: [stocks: 0.1, ipo: 0.08,  ... baseball: 0.0001]
+```
 
-**Check**: How do we classify a new article? How do we make predictions from a decision tree?
+For each word and topic pair, we learn some `P ( word | topic) `
 
-***
+The _topic distribution_ is a multinomial distribution for each document representing which topics are most likely to be in that document. For all documents, we then have a distribution over {sports, science, business}
 
-<a name="guided-practice2"></a>
-## Guided Practice: Decision Trees in scikit-learn (15 mins)
+```
+ESPN article: [sports: 0.8, business: 0.2, science: 0.0]
+Bloomberg article: [business: 0.7, science: 0.2, sports: 0.1]
+```
 
-#### Training a Model in sckit-learn
+For each topic and document pair, we learn some `P ( topic | document) `
 
-In your groups from earlier, work on evaluating the decision tree using cross-validation methods. What metrics would work best? Why?
+![LDA Topic Allocation](./assets/images/lda-topic-distribution.jpg)
 
-**Check:** Are you able to evaluate the decision tree model using cross-validation methods?
+Topic models are useful for organizing a collection of documents and uncovering the main underlying concepts.
 
+There are many variants as well, that attempt to incorporate more structure into the 'model'
 
-<a name="demo"></a>
-## Demo: Overfitting in Decision Trees (20 mins)
+ - Supervised Topic Models
+    - Guide the process with pre-decided topics
+ - Position-dependent topic models
+    - Ignore which words occur in what document but instead focus on _where_ they occur
+ - Variable number of topics
+    - Test a different number of topics to find the best model
 
-Decision trees tend to be weak models because they can memorize or overfit to a dataset.  Remember, a model is _overfit_ when it instead of picking up on general trends in the data, it memorizes or bends to a few specific examples. If we simply memorized each article and it's classification, our model would overfit. This is like using every word in every article as a feature.
+**Check:** Take any recent news-article and brainstorm which 3 topics this story is most likely made up of. Next, brainstorm which words are most likely derived from which of those 3 topics.
 
-For instance, revisiting our previous example, we might ask questions like:
 
-- Is the first word 'The'?
-- Is the second word 'president'
-- Is the third word 'of'
-- etc.
+<a name="demo-lda"></a>
+## Demo: LDA in gensim (30 mins)
 
-This model is attempting to recreate the articles exactly as opposed to learning a general trend. An unconstrained decision tree can learn a fairly extreme tree:
+```python
+import gensim
+```
 
-![](./assets/images/complex-tree-min.png)
+`gensim` is another library of language processing tools focused on latent variable models of text.
 
-We can limit this function in decision trees using a few methods:
+We begin by first translating our set of documents (articles) into the same matrix representation, with a row per document and a column per feature (word or n-gram).
 
-  - Limiting the number of questions (nodes) a tree can have
-  - Limiting the number of samples in the leaf nodes
+```python
+from sklearn.feature_extraction.text import CountVectorizer
 
-**Check:** Why are decision trees generally thought of as weak models? How can we limit our decision trees?
+cv = CountVectorizer(binary=False,
+                     stop_words='english',
+                     min_df=3)
 
-***
+docs = cv.fit_transform(data.body.dropna())
 
-<a name="guided-practice3"></a>
-## Guided Practice: Adjusting Decision Trees to Avoid Overfitting (15 minutes)
+# Build a mapping of numerical ID to word
+id2word = dict(enumerate(cv.get_feature_names()))
+```
 
-Control for overfitting in the decision model by adjusting one of the following parameters:
+We want our model to learn:
+- Which columns are correlated (i.e. likely come from the same topic)? This is the _word distribution_.
+- Which topics are in each document? This is the _topic distribution_.
 
-- `max_depth`: Control the maximum number of questions
-- `min_samples_in_leaf`: Control the minimum number of records in each node
+```python
+from gensim.models.ldamodel import LdaModel
+from gensim.matutils import Sparse2Corpus
 
-**Check:** Were students able to adjust the model using the parameters?
+# First we convert our word-matrix into gensim's format
+corpus = Sparse2Corpus(docs, documents_columns = False)
 
-***
+# Then we fit an LDA model
+lda_model = LdaModel(corpus=corpus, id2word=id2word, num_topics=15)
+```
 
-<a name="introduction2"></a>
-## Introduction: Running through the Random Forests (10 min)
+In the model above, we need to explicitly specify the number of topics we want the model to uncover. This is a critical step but unfortunately there is not a lot of guidance on the best way to select it. Having domain knowledge about your data may help.
 
-Random Forests are some of the most widespread classifiers used.  They are relatively simple to use because they require very few parameters to set and make it easy to avoid overfitting.
+Once we have `fit` this model, like other unsupervised learning techniques, most of our validation techniques are mostly about interpretation.
 
-Random Forests are an _ensemble_ or collection of decision trees.
+- Did we learn reasonable topics?
+- Do the words that make up a topic make sense?
 
-**Advantages:**
+We can evaluate this by viewing the top words for each topic:
 
-- Easy to tune, built-in protection against overfitting, no regularization
-- Non-linear
-- Built-in interaction effects
+`gensim` has a `show_topics` function for this.
 
-**Disadvantages:**
+```python
 
-- Slow
-- Black-box
-- No "coefficients", we don't know what positively or negatively impacts a website being evergreen
+num_topics = 25
+num_words_per_topic = 5
+for ti, topic in enumerate(lda.show_topics(num_topics = num_topics, num_words_per_topic = n_words_per_topic)):
+    print("Topic: %d" % (ti))
+    print (topic)
+    print()
+```
 
-#### Training a Random Forest
+While some of the concepts may not make sense, some may represent clear concepts:
 
-Training a Random Forest model involves training many decision tree models. Since decision trees overfit very easily, we use many decision trees together and randomize the way they are created.
+```
+0.009*cup + 0.009*recipe + 0.007*make + 0.007*food + 0.006*sugar
+```
+is a topic mostly related to cooking and recipes.
 
-1. Take a bootstrap sample of the dataset
-2. Train a decision tree on the bootstrap sample
-2a. For each split/feature selection, only evaluate a _limited_ number of features to find the best one.
-3. Repeat this for _N_ trees
+As is:
 
-#### Predicting using a Random Forest
-Predictions from a Random Forest come from each decision tree.  Each tree makes an individual prediction. The individual predictions are combined in a majority vote.
+```
+0.013*butter + 0.010*baking + 0.010*dough + 0.009*cup + 0.009*sugar
+```
 
-***
+while:
 
-<a name="guided-practice4"></a>
-## Guided Practice: Regression with Decision Trees & Random Forests (20 mins)
-> See iPython notebook for starter and solution code
+```
+0.013*fashion + 0.006*like + 0.006*dress + 0.005*style
+```
+is a topic mostly related to fashion and style.
 
-#### Random Forest in scikit-learn
-Your new goal is to build a random forest model to predict the evergreen-ness of a website, using our existing dataset.
+**Check:** Demonstrate the code you used to generate the topics above. Hypothesize other topic interpretations.
 
-* The key parameter to remember is `n_estimators` or the number of trees to use in the model.
 
-#### Retrieving the important aspects of the model
-Random Forests have a good way of extracting what features are important. Unlike Logistic Regression, we don't have coefficients that tell us whether some input positively or negatively affects our output. But we can keep track of which inputs are most important. We do this by keeping track of the features give us the best splits.
+<a name="introduction-word2vec"></a>
+## Introduction: Word2Vec (20 mins)
 
-#### Regression with Decision Trees and Random Forests
-The same models, both decision trees and random forests can be used for both classification and regression. While predictions for classification problems are made by predicting the majority class in the leaf node, in regression, predictions are made by predicting the average value of the samples in the leaf node.
+`Word2Vec` is another unsupervised model for latent variable natural language processing. It is a model that was [originally released by Google](https://code.google.com/p/word2vec/) and further [improved at Stanford](http://nlp.stanford.edu/projects/glove/)
 
-**Check:** By this point, you should be able to adjust the given model using the `n_estimators` parameter.
+This model creates *word vectors*, which are multi-dimensional representations of words. This is similar to having a distribution of concepts or topics that the word is associated with.
 
-***
+If we take our usual document-word matrix (from `CountVectorizer`) and take its transpose (by flipping it on it's side), instead of talking about words as features of a document, we can talk about _documents as features of a specific word_. In other words, how do we define or characterize a single word?
 
-## Independent Practice: Evaluate Random Forest Using Cross-Validation (25 minutes)
-> Use the iPython notebooks for [starter](./code/starter-code/starter-code-12.ipynb) and [solution](./code/solution-code/solution-code-12.ipynb) code in this section
+We can do this by:
 
-1. Continue adding input variables to the model that you think may be relevant
-2. For each feature:
-  - Evaluate the model for improved predictive performance using cross-validation
-  - Evaluate the _importance_ of the feature
-  -
-3. **Bonus**: Just like the 'recipe' feature, add in similar text features and evaluate their performance.
+1) Defining it's dictionary definition, or
+2) Enumerating all the ways we might use it.
 
-**Check:** Each student should improve on their original model (in AUC) either by increasing the size of the model or adding in additional features.
+For example, given the word 'Paris', we have many contexts or uses we may find it in:
 
-***
+```
+['_ is the capital of', '_, France', 'the capital city _', 'the restaurant in _',]
+```
+
+and a bunch of contexts we _don't_ expect to find it:
+
+```
+['can I have a _', 'there's too much _ on this' ... and millions more]
+````
+
+We could make a "feature" or column for each of these contexts. So we could *represent* the word 'Paris' as 1-hot vector of all possible contexts it appears in. This would be very sparse. Of all the millions of ways we might use a word, we will only use 'Paris' in a very, very small number of them.
+
+Additionally, the first few represent the *same* concept (or multiple concepts):
+
+1. Paris is a city like thing, so it contains shops and restaurants
+1. Paris is a capital city
+
+What we want to do is apply **dimensionality reduction** to find a few concepts per word (instead of looking for _all_ of the possible contexts).
+
+In **LDA**, we could do this by identifying the topics a word was most likely to come from.
+
+In **word2vec**, we will traditionally replace the overlapping contexts by some concept that represents both of them.
+
+Like other dimensionality reduction techniques, our goal is to identify correlated columns and replace them with a new column that represents the columns we replaced.
+
+For example, we can replace columns ['_ is a city', '_ is a capital', 'I flew into _ today'] with a single column - 'IsACity' column.
+
+
+`word2vec` was originally presented as a deep learning model, but is more closely related to standard dimensionality reduction techniques. A common feature of `word2vec` is being able to ask which words are similar to each other? If we have data on multiple languages, a system like word2vec could also be used for translation.
+
+![Word2Vec translation](./assets/images/word2vec-translation.png)
+
+> **Check:** After reviewing the anologies, brainstorm some word vector math. For example, consider the prototypical example of 'King' - 'Man' = 'Queen'
+
+
+<a name="demo-word2vec"></a>
+## Demo: Word2Vec in `gensim` (20 min)
+
+`word2vec` is also available in `gensim`.
+
+We will build a `word2vec` model using the body text of the articles available in the StumbleUpon dataset.
+
+```python
+# Setup the body text
+text = data.body.dropna().map(lambda x: x.split())
+
+from gensim.models import Word2Vec
+model = Word2Vec(text, size=100, window=5, min_count=5, workers=4)
+```
+Here:
+- `size` represents how many concepts or topics we should use
+- `window` represents how many words surrounding a sentence we should use as our original features
+- `min_count` is the number of times that context or word must appear
+- `workers` is the number of CPU cores to use to speed up model training
+
+The model has a `most_similar` function that helps find the words most similar to the one you queried. This will return words that are often used in the same context.
+
+```python
+model.most_similar(positive=['cookie', 'brownie'])
+```
+
+It can easily identify words related to those from this dataset (remember, most of the articles in this dataset are food or cooking related).
+
+
+<a name="independent-practice"></a>
+## Independent Practice (45 min)
+
+In this exercise, we will compare some of the classical NLP tools from the last class with these more modern latent variable techniques. We will do this by comparing information extraction techniques on Twitter using the two methods.
+
+> Instructor Note: If you want students to capture their own collection of tweets using the Twitter API,[ use the following instructions](./code/twitter-instructions.md). It requires some setup and a Twitter account.
+
+> If not - you can use a [pre-existing file of captured tweets](./assets/dataset/captured-tweets.txt) relating tech companies and Middle Eastern companies.
+
+**Bonus**: Want to collect your own tweets? Here are some instructions. We'll use the Twitter API to build a collection of tweets to learn from. After that, we'll filter future tweets based on some established conditions.
+
+To collect tweets, we run the following code. Each tweet comes in as a Python dictionary, which contains many fields of metadata. The one we are most interested in is `text` which has the actual text of the tweet.
+
+The `retrieve_tweets` function takes a topic, to limit the tweets we receive to that topic.
+
+```python
+import twitter
+
+tweets = twitter.retrieve_tweets(topic = 'google')
+
+num_tweets_to_collect = 2000
+tweets_text = []
+
+n = 0
+for tweet in tweets:
+   tweet_text = tweet['text']
+   tweets_text.append(tweet_text)
+
+    n = n + 1
+
+    if n == num_tweets_to_collect:
+       break
+```
+
+You can collect your own tweets, or use [the existing collection found here](./assets/dataset/captured-tweets.txt).
+
+#### Loading the data
+
+```python
+tweets = [tweet for tweet in open('../../assets/dataset/captured-tweets.txt', 'r')]
+```
+
+#### Setting up spacy
+
+```python
+from spacy.en import English
+nlp_toolkit = English()
+```
+
+Now we'd like to do a few things:
+
+1. Use `spacy` to write a function to filter tweets down to those where Google is announcing a product. How might we do this? One way might be to identify verbs, where 'Google' is the noun and there is some action like 'announcing'
+
+    a. Write a function that can take a sentence parsed by `spacy` and identify if it mentions a company named 'Google'. Remember, `spacy` can find entities and code them as `ORG` if they are a company.
+
+        i. **BONUS**: Make this function work for any company
+
+    b. Write a function that can take a sentence parsed by `spacy` and return the verbs of the sentence (preferably lemmatized)
+
+    c. For each tweet, parse it using `spacy` and print it out if the tweet has 'release' or 'announce' as a verb.
+
+    d. Write a function that identifies countries. HINT: the entity label for countries is GPE (or "GeoPolitical Entity")
+
+    e. Re-run (d) to find country tweets that discuss 'Iran' announcing or releasing.
+
+2. Build a `word2vec` model of the tweets we have collected using `gensim`
+
+    a. First take the collection of tweets and tokenize them using `spacy`
+
+        i. Think about how this should be done. Should you only use upper-case or lower-case? Should you remove punctuations or symbols?
+
+    b. Build a `word2vec` model
+
+        i. Test the window size as well - this is how many surrounding words need to be used to model a word. What do you think is appropriate for Twitter?
+
+    c. Test your word2vec model with a few similarity functions.
+
+        i. Find words similar to 'Syria'
+
+        ii. Find words similar to 'war'
+
+        iii. Find words similar to "Iran"
+
+        iv. Find words similar to 'Verizon'
+
+    d. Adjust the choices in (b) and (c) as necessary
+
+3. Filter tweets to those that mention 'Iran' or similar entities and 'war' or similar entities.
+
+    a. Do this using just `spacy`
+
+    b. Do this using `word2vec` similarity scores
+
 
 <a name="conclusion"></a>
-## Conclusion (5 mins)
+## Conclusion (10 mins)
 
-#### Review Q&A
+Concept Review:
 
-1. What are decision trees?
-    - Decision trees are non-linear models that can be used for classification or regression.
-
-2. What does training involve?
-    - Training means using the data to decide the best questions to separate the data into our two classes. Predictions are then made by answering those questions.
-
-3. What are some common problems with Decision Trees?
-    - Decision trees are typically weak models and overfit very easily
-
-4. What are Random Forests?
-    - Random forests are collections of decision trees and are much more powerful models
-
-5. What are some common problems with Random Forests?
-    - While they are very good predictive models, they are more often a black-box and lack the explanatory features of linear/logistic regression
+- Latent variable models attempt to uncover structure from text.
+- Dimensionality reduction is focused on replacing correlated columns.
+- Topic modeling (or LDA) uncovers the topics that are most common to each document and then the words most common to those topics.
+- Word2Vec builds a representation of a word from the way it was used originally.
+- Both techniques avoid learning grammar rules and instead rely on large datasets. They learn based on how the words are used, making them very flexible.
 
 ***
 
 ### BEFORE NEXT CLASS
 |   |   |
 |---|---|
-| **UPCOMING PROJECTS**  | [Final Project, Deliverable 2](../../projects/final-projects/02-experiment-writeup/readme.md)  |
+| **DUE TODAY**  | [Final Project, Deliverable 2](../../projects/final-projects/02-experiment-writeup/readme.md) |
+| **UPCOMING PROJECTS**  | [Final Project, Deliverable 3](../../projects/final-projects/03-exploratory-analysis/readme.md) |
 
 ### ADDITIONAL RESOURCES
-- Add your own resources.
-- Go crazy.
-- So much room for bullets!
+- [Five Takeaways on the State of Natural Language Processing](http://www.wise.io/tech/five-takeaways-on-the-state-of-natural-language-processing)
+
+#### LDA (Latent Dirichlet Allocation)
+- [Introduction to LDA](http://blog.echen.me/2011/08/22/introduction-to-latent-dirichlet-allocation/)
+- [Gensim LDA documentation](https://radimrehurek.com/gensim/models/lda.html)
+
+#### Word2Vec
+- [Gensim Word2Vec documentation](https://radimrehurek.com/gensim/models/word2vec.html)
+- [How Google Converted Language Translation Into a Problem of Vector Space Mathematics](http://www.technologyreview.com/view/519581/how-google-converted-language-translation-into-a-problem-of-vector-space-mathematics/)
+- [A word is worth a thousand vectors](http://multithreaded.stitchfix.com/blog/2015/03/11/word-is-worth-a-thousand-vectors/)
+- [Word Embeddings For Fashion](http://developers.lyst.com/2014/11/11/word-embeddings-for-fashion/)
+- [Building the Next New York Times Recommendation Engine](http://open.blogs.nytimes.com/2015/08/11/building-the-next-new-york-times-recommendation-engine/?_r=0)
