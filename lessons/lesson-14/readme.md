@@ -1,313 +1,472 @@
 ---
-title: Decision Trees and Random Forests
+title: Natural Language Processing (NLP) and Text Classification
 duration: "3:00"
 creator:
     name: Arun Ahuja
     city: NYC
 ---
 
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Decision Trees & Random Forests
-DS | Lesson 12
+# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Natural Language Processing and Text Classification
+DS | Lesson 13
 
 ### LEARNING OBJECTIVES
 *After this lesson, you will be able to:*
 
-- Understand and build decision tree models for classification and regression
-- Understand the differences between linear and non-linear models
-- Understand and build random forest models for classification and regression
-- Know how to extract the most important predictors in a random forest model
-
+- Define natural language processing
+- List common tasks associated with:
+  - use-cases
+  - tokenization
+  - tagging
+  - parsing
+- Demonstrate how to classify text or documents using `scikit-learn`
 
 ### STUDENT PRE-WORK
 *Before this lesson, you should already be able to:*
 
-- Use seaborn to create plots
-- Knowledge of a bootstrap sample
-- Explain the concepts of cross-validation, logistic regression, and overfitting
-- Know how to build and evaluate _some_ classification model in sckit-learn using cross-validation and AUC
+- Experience with sckit-learn classifiers, specifically Random Forests and Decision trees
+- Install `spacy` with `pip install spacy` (or use Anaconda)
+- Run the `spacy` download data command
 
+  ```python
+  python -m spacy.en.download --force all
+  ```
 
 ### INSTRUCTOR PREP
 *Before this lesson, instructors will need to:*
 
 - Remind students about [Final Project, pt. 2](../../projects/final-projects/02-experiment-writeup/readme.md)
-- Copy and modify the [lesson slide deck](./assets/slides/slides-12.md)
+- Copy and modify the [lesson slide deck](./assets/slides/slides-13.md)
 - Read through datasets and starter/solution code
 - Add to the "Additional Resources" section for this lesson
+- Install `spacy` with `pip install spacy` (or use Anaconda)
+- Run the `spacy` download data command
+
+  ```python
+  python -m spacy.en.download --force all
+  ```
 
 ### LESSON GUIDE
 | TIMING  | TYPE  | TOPIC  |
 |:-:|---|---|
-| 5 min  | [Opening](#opening)  | Objectives & Prep  |
-| 25 min  | [Guided Practice](#guided-practice1)  | Explore the Dataset  |
-| 30 min  | [Introduction](#introduction1)   | Training Decision Trees  |
-| 15 min  | [Guided Practice](#guided-practice2)  | Decision Trees in scikit-learn  |
-| 20 min  | [Demo](#demo)  | Overfitting in Decision Trees   |
-| 15 min  | [Guided Practice](#guided-practice3)  | Adjusting Decision Trees to Avoid Overfitting  |
-| 10 min  | [Introduction](#introduction2)   | Running through the Random Forests  |
-| 20 min  | [Guided Practice](#guided-practice4)  | Regression with Decision Trees & Random Forests  |
-| 25 min  | [Independent Practice](#ind-practice)  | Evaluate Random Forest Using Cross-Validation  |
-| 5 min  | [Conclusion](#conclusion)  | Review & Recap  |
+| 10 min  | [Opening](#opening)  | Decision Trees and Random Forests |
+| 30 mins  | [Introduction](#introduction-nlp)   | Natural Language Processing (NLP)  |
+| 30 mins  | [Demo](#demo-spacy)  | NLP with spacy in Python  |
+| 30 mins  | [Introduction](#introduction-classification)   | Text Classification  |
+| 30 mins  | [Demo](#demo-text-sklearn)  | Text Classification with scikit-learn |
+| 30 mins  | [Independent Practice](#ind-practice)  | Text Classification with scikit-learn  |
+| 10 mins  | [Conclusion](#conclusion)  |   |
 
 ---
 
 <a name="opening"></a>
-## Opening (5 mins)
+## Review: Decision Trees and Random Forests  (10 mins)
+Recall definitions of Decision Trees and Random Forests from previous lesson.
 
-- Review pre-work, projects, or prior exit ticket, if applicable
-- Discuss current lesson objectives
-- Review basics of logistic regression
-- Orient material to the Data Science workflow
+**Check:** What are some important features of decision trees and random forests?
 
-**Check**: Define the difference between the precision and recall of a model. What are some common components and use cases for logistic regression?
+  - Decision trees are weak learners that are easy to overfit
+  - Random forests are strong models that made up a collection of decision trees
+    - They are non-linear (while logistic regression is linear)
+    - They are mostly black-boxes (no coefficients, but we do have a measure of feature importance)
+    - They can be used for classification or regression
 
-#### Review the Data Science Workflow
-In this lesson we will focus on mining the dataset and building a model. We will focus on refining our model for the best predictive ability.
+<a name="introduction-nlp"></a>
+## Introduction: Natural Language Processing (30 mins)
 
-***
+### What is Natural Language Processing? (NLP)
 
-<a name="guided-practice1"></a>
-## Guided Practice: Explore the Dataset (25 mins)
+Natural language processing is the task of extracting meaning and information from text documents. There are many types of information we might want to extract; these include simple classification tasks, such as deciding what category a piece of text falls into or what tone it has, as well as more complex tasks like translating or summarizing text.
 
-#### The Dataset
-The dataset we will be looking at today is from [StumbleUpon](http://stumbleupon.com). StumbleUpon provides a service to recommend webpages to users, and mostly they would like these websites to be "evergreen".
+Most AI assistant systems are typically powered by fairly advanced NLP engines. A system like Siri uses voice-to-transcription to record a command and then various NLP algorithms to identify the question asked and possible answers.
 
-What are _evergreen_ sites? Evergreen sites are sites that are **always relevant**. As opposed to breaking news or current events, evergreen websites are relevant no matter the time or season. This usually means websites that avoid topical content and focus instead on recipes, how-to guides, or art projects.
+For any of these tasks, from classification to translation, a fair amount pre-processing is required to make the text digestible for our algorithms. Typically we need to add some structure to the text (unstructured data) before we can make decisions based on it.
 
-#### Exercises to Get Started
-We will revisit the data science workflow in order to explore the dataset and determine important characteristics for "evergreen" websites.
 
-In a group:
+### Tokenization
 
-1. Prior to looking at the available data, brainstorm 3 - 5 characteristics that would be useful for predicting evergreen websites.
+Tokenization is the task of separating a sentence into it's constituent parts, or **tokens**. How do we know what the "words" are in a particular sentence? While this may seem easy (for example, we can separate words using spaces or pauses) it becomes more complex when we consider unusual punctuation (common in social media) or different language conventions.
 
-2. After looking at the dataset, can you model or quantify any of the characteristics you wanted?
-    - For instance, if you believe high-image content websites are likely to be evergreen, then how would you build a feature that represents high image content?
-    - Or if you believe weather content ISN'T likely to be evergreen, then how would you build a feature to reflect that?
+For example, can you spot any potential difficulties with this sentence?
+_The L.A. Lakers won the NBA championship in 2010, defeating the Boston Celtics._
 
-        * _See notebook for data dictionary_
-        * _See notebook for starter code for exercises_
 
-3. Does being a news site affect "evergreen-ness"? Compute or plot the percent of evergreen news sites.
-4. Does category in general affect evergreen-ness? Plot the rate of evergreen sites for all Alchemy categories.
-5. How many articles are there per category?
-6. Create a feature for the title containing "recipe". Is the % of evergreen websites higher or lower on pages that have "recipe" in the the title?
+To perform a proper analysis, we need to be able to identify that:
 
-**Check:** Were you able to plot the requested features? Can you explain how you would approach this type of dataset?
+- The periods in _L.A._ don't mark the end of a sentence but an abbreviation.
+- _L.A. Lakers_ and _Boston Celtics_ are one concept.
+- _"2010"_ is the word used, not _"2010,"_
 
-***
 
-<a name="introduction1"></a>
-## Introduction: Training Decision Trees (30 mins)
+### Lemmatization and Stemming
 
-#### Intuition
-Decisions trees are similar to the game 20 questions. They make predictions by answering a series of questions, most often yes or no questions.  What we typically want is the smallest set of questions to get to the right answer. We want each question to reduce our search space as much as possible.
+Abbreviations, proper nouns, and dates can pose a problem, but there are many other language features that also have to be broken down. Consider the terms 'bad' and 'badly' or 'different' and 'differences'. How can we describe the relationships between these terms?
 
-_Trees_ are a data structure made up of _nodes_ and _branches_. Each node typically has two (or more) branches that connect it to it's children. Each child is another node in the tree and contains it's own _subtree_. Nodes without any children are known as _leaf_ nodes.
+Stemming and lemmatization are two solutions to this type of problem. Once we've identified the **tokens** of our sample text, we can use these tools to identify common roots.
 
-A _decision tree_ contains a question at every node. Depending on the answer to that question, we will proceed down the left or right branch of the tree and ask another question. Once we don't have any more questions at the _leaf_ nodes, we make a prediction.
+**Stemming** is a crude process of removing common endings from sentences:
 
-It's important to note the next question we ask is always dependent on the last.  We'll see how this sets decision trees apart from previous models. For example, suppose we want to predict if an article is a news article. We may start by asking: does it mention a President?
+- Stemming removes endings with `s`, `es`, `ly`, `ing`, and `ed`.
 
-- If it does, it must be a news article
-- If not, let's ask another question - does the article contain other political figures?
-- If not, does the article contain references to political topics?
-- Etc
+This is useful so that we can treat the word `happy` and `happily` similarly.
 
-**Check**: Using our dataset from earlier, try to predict whether a given article is evergreen.
+There are many well-known stemmer functions that can import many of these common endings, most notably the [Porter stemmer](http://tartarus.org/martin/PorterStemmer/).
 
-#### Comparison to previous models
-Decision trees have an advantage over logistic regression by being _non-linear_. A _linear_ model is one in which a change in an input variable has a constant change on the output variable.
+**Lemmatization** is a more refined version that attempts to accomplish the same goal as stemming, but does so by using specific language and grammar rules. A lemmatizer relies on a large collection of pre-defined grammar rules to perform this type of task.
 
-An example of this difference is the relationship between years of education and salary. We know that as education increases, salary should as well. A linear model would say this effect is constant.  As your years of education goes from 10 to 15 years or 15 to 20 years, the corresponding increase in salary would be about the same. A _non-linear_ model allows us to change the effect depending on the input. For instance, with a non-linear model you could show how the relationship of education to salary changes dramatically from 0-15 years, but negligibly from years 15-20.
+For example, we can identify that "bad" and "badly" are similar using stemming.  However, this heuristic won't be able to tell that "better" and "best" are similar. That's where lemmatization comes in handy.
 
-Additionally, trees automatically contain interactions of features. Since each question is dependent on the last, the features are naturally interacting.
+**Check:** Can you think of other problem words or phrases that might require these tools?
 
-**Check**: Why do decision trees have an advantage over logistic regression?
+### Parsing and Tagging
 
-#### Training a Decision Tree Model
-Training a decision tree is about deciding on the best set of questions to ask. A good question will be one that best segregates the positive group from the negative group and then narrows in on the correct answer. For example, in our toy problem of classifying news stories, the best question we can ask is one that creates 2 groups, one that is mostly news stories and on that is mostly non-news stories.
+Another classic NLP problem involves _parsing_ text and _tagging_. In order to understand the various elements of a sentence, we need to **tag** important topics and **parse** their dependencies. Our goal is to successfully identify the actors and actions in the text in order to make informed decisions.
 
-Like all data science techniques, we need to quantify this segregation.  We can do so with any of the following metrics:
+For example if we are processing financial news, we might need to identify which companies are involved and any actions they are taking. We would then be able to create an alert when a specific company releases a new product.  
 
-- [Classification Error]
-- [Entropy]
-- [Gini](https://en.wikipedia.org/wiki/Gini_coefficient)
+Alternatively, if we are writing an assistant application, we might need to identify specific command phrases in order to determine what is being asked. For instance, given the phrase: 'Siri, what time is my next appointment?' what needs to be tagged and what needs to be parsed?
 
-Each of these measures the _purity_ of the separation. Classification error asks: what percent are positive in each group? The lowest error would be a separation that has 100% positive in one group and 0% in the other (completely separating news stories from non-news stories.)
+Tagging and parsing is in fact made up of a few overlapping sub-problems:
 
-When training, we want to choose the question that gives us the best _change_ in our purity measure. Given our current set of data points (articles), you could ask: what question will make the largest change in purity?
+  - "Parts of speech" tagging:
+    - What are the parts of speech in a sentence? Which is the noun, verb, adjective, etc?
+  - Chunking:
+    - Can we identify the pieces of the sentence that go together in meaningful chunks? For instance, noun or verb phrases?
+  - Named entity recognition:
+    - Can we identify *specific* proper nouns? Can we pick out people and locations?
 
-At each training step, we take our current set and choose the best feature to split (in other words, the best question to ask) based on information gain. After splitting, we then have two new groups. This process is next repeated _recursively_ for each of those two groups.
+As you can see, NLP requires a large number of overlapping rules and dictionaries; however, the potential benefits are enormous.
 
-Let's build a sample tree for our evergreen prediction problem. Assume our features are:
-
-- Whether the article contains a recipe
-- The image ratio
-- The html ratio
-
-First, we want to choose the feature the gives us the highest purity. In this case, we choose the recipe feature.
-
-![](./assets/images/single-node-tree.png)
-
-Then, we take each side of the tree and repeat the process, choosing the feature that best splits the remaining samples.
-
-![](./assets/images/depth-2-tree.png)
-
-As you can see the best feature is different on both sides of this tree, which shows the interaction of features. If the article does not contain 'recipe', then we care about the image_ratio, but otherwise we don't.
-
-We can continue that process until we have asked as many questions as we want or until our leaf nodes are completely pure.
-
-#### Making predictions from a Decision Tree
-Predictions are made in the decision tree from answering each of the questions. Once we reach a leaf node, our prediction is made by taking the majority label of the training samples that fulfill the questions. If there are 10 training samples that match our new sample, and 6 are positive, we will predict positive since 6/10 (60%) are positive.
-
-In the sample tree, if we want to classify a new article, we can proceed by first asking - does the article contain the word recipe? If it doesn't, we can check: does the article have a lot of images? If it does, 630 / 943 articles are evergreen - so we can assign a 0.67 probability for evergreen sites.
-
-**Check**: How do we classify a new article? How do we make predictions from a decision tree?
+**Check:** How might NLP be applied within your current jobs or final projects? What are some potential use-cases?
 
 ***
 
-<a name="guided-practice2"></a>
-## Guided Practice: Decision Trees in scikit-learn (15 mins)
+<a name="demo-spacy"></a>
+## Demo / Codealong: Natural Language Processing with 'spacy' (30 mins)
 
-#### Training a Model in sckit-learn
+Most techniques for NLP involve pre-processing large collections of annotated text in order to learn specific language rules. There are many of these systems in-use for English and other popular languages, although some languages tend to have fewer tools available. Each tool typically requires a large amount of data in order to learn general rules and patterns for its task. Many also require large databases of special use-cases, since languages like English are full of inconsistencies and slang.
 
-In your groups from earlier, work on evaluating the decision tree using cross-validation methods. What metrics would work best? Why?
+Two popular NLP toolkits in Python are `nltk` and `spacy`. `nltk` is the most popular, but it hasn't kept up with advances and isn't very well maintained. `spacy` is more modern, but isn't available for commercial-use.
 
-**Check:** Are you able to evaluate the decision tree model using cross-validation methods?
+We'll be using `spacy` in this class, although `nltk` has a similar interface and functionality. Most of the utilities and individual tasks we'll be performing also have their own specialized tools available as well.
 
+Let's start by attempting to process some of the titles.
 
-<a name="demo"></a>
-## Demo: Overfitting in Decision Trees (20 mins)
+First, we'll load our NLP toolkit by specifying the language:
 
-Decision trees tend to be weak models because they can memorize or overfit to a dataset.  Remember, a model is _overfit_ when it instead of picking up on general trends in the data, it memorizes or bends to a few specific examples. If we simply memorized each article and it's classification, our model would overfit. This is like using every word in every article as a feature.
+  ```python
+  from spacy.en import English
 
-For instance, revisiting our previous example, we might ask questions like:
+  nlp_toolkit = English()
+  ```
 
-- Is the first word 'The'?
-- Is the second word 'president'
-- Is the third word 'of'
-- etc.
+  This toolkit has 3 pre-processing engines:
 
-This model is attempting to recreate the articles exactly as opposed to learning a general trend. An unconstrained decision tree can learn a fairly extreme tree:
+    - a tokenizer: to identify the word tokens
+    - a tagger: to identify the concepts described by the words
+    - a parser: to identify the phrases and links between the different words
 
-![](./assets/images/complex-tree-min.png)
+Each of these pre-processing tasks can be overridden with a specific tool you have (you may want a specialized tokenizer that looks for stock quotes or Instagram posts instead of news headlines). You could also write your own tokenizer or tagger for those tasks and use them in place of the default ones `spacy` provides. For now, we'll use the defaults.
 
-We can limit this function in decision trees using a few methods:
+The first title is:
 
-  - Limiting the number of questions (nodes) a tree can have
-  - Limiting the number of samples in the leaf nodes
+- [_IBM Sees Holographic Calls, Air Breathing Batteries_](http://www.bloomberg.com/news/articles/2010-12-23/ibm-predicts-holographic-calls-air-breathing-batteries-by-2015)
 
-**Check:** Why are decision trees generally thought of as weak models? How can we limit our decision trees?
+ From this we may wish to extract that the article references a company and that the company is referencing a new possible product: air-breathing batteries.
+
+ ```python
+
+ title = "IBM sees holographic calls, air breathing batteries"
+ parsed = nlp_toolkit(title)
+
+ for (i, word) in enumerate(parsed):
+    print("Word: {}".format(word))
+    print("\t Phrase type: {}".format(word.dep_))
+    print("\t Is the word a known entity type? {}".format(word.ent_type_  if word.ent_type_ else "No"))
+    print("\t Lemma: {}".format(word.lemma_))
+    print("\t Parent of this word: {}".format(word.head.lemma_))
+```
+
+The `nlp_toolkit` here runs each of the individual pre-processing tools: first it tokenizes the sentence, then it identifies the components, and finally it builds an interpretation of the sentence.
+
+Output:
+
+```
+Word: IBM
+   Phrase type: nsubj
+   Is the word a known entity type? ORG
+   Lemma: ibm
+   Parent of this word: see
+Word: sees
+   Phrase type: ROOT
+   Is the word a known entity type? No
+   Lemma: see
+   Parent of this word: see
+Word: holographic
+   Phrase type: amod
+   Is the word a known entity type? No
+   Lemma: holographic
+   Parent of this word: call
+Word: calls
+   Phrase type: dobj
+   Is the word a known entity type? No
+   Lemma: call
+   Parent of this word: see
+Word: ,
+   Phrase type: punct
+   Is the word a known entity type? No
+   Lemma: ,
+   Parent of this word: call
+Word: air
+   Phrase type: compound
+   Is the word a known entity type? No
+   Lemma: air
+   Parent of this word: breathing
+Word: breathing
+   Phrase type: compound
+   Is the word a known entity type? No
+   Lemma: breathing
+   Parent of this word: battery
+Word: batteries
+   Phrase type: conj
+   Is the word a known entity type? No
+   Lemma: battery
+   Parent of this word: call
+```
+
+In this output:
+
+- "IBM" is identified as an organization (ORG).
+- We identify a phrase 'holographic calls'
+- We identify a compound noun phrase at the end - 'air breathing batteries'.
+- We can that 'see' is at a root as it is the action 'IBM' is taking.
+- Additionally, we can see that 'batteries' was lemmatized to 'battery'.
+
+We can also use this to find all titles that discuss an organization.
+
+```python
+def references_organization(title):
+  parsed = nlp(title)
+  return any([word.ent_type_ == 'ORG' for word in parsed])
+
+data['references_organization'] = data['title'].fillna('').map(references_organization)
+
+data[data['references_organization']][['title']].head()
+```
+
+**Check:** Write a function to identify titles that have mention an organization (ORG) and person (PERSON).
+
+Solution:
+
+```python
+def references_organization_and_person(title):
+    parsed = nlp(title)
+    has_org = any([word.ent_type_ == 'ORG' for word in parsed])
+    has_person = any([word.ent_type_ == 'PERSON' for word in parsed])
+    return has_org and has_person
+
+data['references_organization_and_person'] = data['title'].fillna('').map(references_organization_and_person)  
+data[data['references_organization_and_person']][['title']].head()
+```
+
+### Common Problems in NLP
+
+It's important to keep in mind that each of these subtasks are still very difficult because of the complexity of language. Most often we are looking for heuristics to search through large amounts of text data. There is still a lot of active research being done in each of these areas.
+
+In the last few years, there has been less focus on the rule-based systems seen here. Instead, researchers are looking for more flexible approaches. While older techniques first attempt to uncover the rules of the language and then use those rules to understand text, modern approaches do not attempt to _parse_ or understand the structure of a sentence first. Instead, they just rely on which words are being used. We'll see an example of these modern approaches in the next class.
 
 ***
 
-<a name="guided-practice3"></a>
-## Guided Practice: Adjusting Decision Trees to Avoid Overfitting (15 minutes)
+<a name="introduction-classification"></a>
+## Introduction: Text Classification (30 mins)
 
-Control for overfitting in the decision model by adjusting one of the following parameters:
+Text classification is the task of predicting what category or topic a piece of text is from. For example, we may want to identify whether an article is a sports or a business story.  We may also want to identify whether an article is positive or negative in sentiment.
 
-- `max_depth`: Control the maximum number of questions
-- `min_samples_in_leaf`: Control the minimum number of records in each node
+Typically this is done by using the text as the features input for the model, and - as in previous classifications - using the label (sports or business, positive or negative) as the target output for it to train on.
 
-**Check:** Were students able to adjust the model using the parameters?
+When we want to include the text as features, we usually create a _binary_ feature for each word. Then each feature boils down to: "does this piece of text contain that word?"
 
-***
+To do this, we must first create a vocabulary, in order to account for all the possible words in our universe. We will do this in a data-driven way, which usually means taking in all of the words that appear in our corpus. We'll then filter them based on occurrence or usefulness.
 
-<a name="introduction2"></a>
-## Introduction: Running through the Random Forests (10 min)
+In doing so, we'll have many encoding or representation questions along the way, such as:
 
-Random Forests are some of the most widespread classifiers used.  They are relatively simple to use because they require very few parameters to set and make it easy to avoid overfitting.
+  - Does the order of words matter?
+  - Does punctuation matter?
+  - Upper or lower case? Should we treat 'Python' as different from 'python'?
 
-Random Forests are an _ensemble_ or collection of decision trees.
+The answer to each of these is problem dependent, but all of them will affect our modeling problem.
 
-**Advantages:**
+**Check:** What do you think? Does word order matter? Case? Punctuation? Discuss and explain your reasoning.
 
-- Easy to tune, built-in protection against overfitting, no regularization
-- Non-linear
-- Built-in interaction effects
+Solution:
 
-**Disadvantages:**
+- [ ] Yes, order of words may matter.
+  - This is especially true when trying to predict positive or negative sentiment.
+- [ ] Yes, punctuation may matter.
+  - In sentiment prediction, saying "amazing!!!" may result in a different tone than "amazing."
+- [ ] Yes, letter case may matter.
+  - Upper-case words or phrases are usually proper nouns. For instance, "Python" is more likely to refer to a programming language, while "python" may refer to either the programming language or a type of snake.
 
-- Slow
-- Black-box
-- No "coefficients", we don't know what positively or negatively impacts a website being evergreen
 
-#### Training a Random Forest
+Note: Classification using words from the text as features is known as **bag-of-words** classification.
 
-Training a Random Forest model involves training many decision tree models. Since decision trees overfit very easily, we use many decision trees together and randomize the way they are created.
-
-1. Take a bootstrap sample of the dataset
-2. Train a decision tree on the bootstrap sample
-2a. For each split/feature selection, only evaluate a _limited_ number of features to find the best one.
-3. Repeat this for _N_ trees
-
-#### Predicting using a Random Forest
-Predictions from a Random Forest come from each decision tree.  Each tree makes an individual prediction. The individual predictions are combined in a majority vote.
+**Check:** What is "bag-of-words" classification stand for and when should it be used? What are some benefits to this approach?
 
 ***
 
-<a name="guided-practice4"></a>
-## Guided Practice: Regression with Decision Trees & Random Forests (20 mins)
-> See iPython notebook for starter and solution code
+<a name="demo-text-sklearn"></a>
+## Demo / Codealong: Text Processing in scikit-learn (30 mins)
 
-#### Random Forest in scikit-learn
-Your new goal is to build a random forest model to predict the evergreen-ness of a website, using our existing dataset.
+> Instructor Note: Have students open and walk through the [starter code](./code/starter-code/starter-code-13.ipynb) notebook here.
 
-* The key parameter to remember is `n_estimators` or the number of trees to use in the model.
+Scikit-learn has many pre-processing utilities that simplify many of the tasks required to convert text into features for a model. These can be found in the `sklearn.preprocesing.text` package.
 
-#### Retrieving the important aspects of the model
-Random Forests have a good way of extracting what features are important. Unlike Logistic Regression, we don't have coefficients that tell us whether some input positively or negatively affects our output. But we can keep track of which inputs are most important. We do this by keeping track of the features give us the best splits.
+We will use the StumbleUpon web crawl dataset again and perform a text classification text. Instead of using other features of the webpages, we will use the text content itself to predict whether or not the webpage is 'evergreen'.
 
-#### Regression with Decision Trees and Random Forests
-The same models, both decision trees and random forests can be used for both classification and regression. While predictions for classification problems are made by predicting the majority class in the leaf node, in regression, predictions are made by predicting the average value of the samples in the leaf node.
 
-**Check:** By this point, you should be able to adjust the given model using the `n_estimators` parameter.
+#### CountVectorizer
+
+There are built-in utilities to pull out features from text in `scikit-learn` - most importantly, `CountVectorizer`. It converts a collection of text into a matrix of features. Each row will be a sample (an article or piece of text) and each column will be a text feature (usually a count or binary feature per word).
+
+`CountVectorizer` takes a column of text and creates a new dataset - one row per piece of text (i.e. one row per title) and generates a feature for **every** word in the all of the titles.
+
+**REMEMBER**: Using all of the words can be very useful, but we also need to remember to use regularization to avoid overfitting. Otherwise, using rare words may result in the model learning something that isn't generalizable.
+
+For example, if we are attempting to predict sentiment and see an article that has the word "bessst!", we may link this word to positive sentiment. However, very few articles may ever use this word, so it isn't actually very useful for our model.
+
+```python
+from sklearn.feature_extraction.text import CountVectorizer
+
+vectorizer = CountVectorizer(max_features = 1000,
+                             ngram_range=(1, 2),
+                             stop_words='english',
+                             binary=True)
+```
+
+
+`CountVectorizer` arguments:
+
+- `ngram_range` - a range of of length of phrases to use
+    - `(1,1)` means use all single words
+    - `(1,2)` all contiguous pairs of words
+    - `(1,3)` all triples etc.
+- `stop_words='english'`
+    - Stop words are non-content words (e.g. 'to', 'the', 'it', 'at'). They aren't helpful for prediction (most of the time) so this parameter removes them.
+- `max_features=1000`
+    - Maximum number of words to consider (uses the first N as most frequent)
+- `binary=True`
+    - To use a dummy column as the entry (1 or 0, as opposed to the count). This is useful if you think a word appearing 10 times is not more important than whether the word appears at all.
+
+Like models or estimators in `scikit-learn`, vectorizers follow a similar interface:  
+
+  - We create a vectorizer object with the parameters of our feature space.
+  - We `fit` a vectorizer to learn the vocabulary
+  - We `transform` a set of text into that feature space.
+
+There is a distinction between `fit` and `transform` when it comes to splitting datasets into 'training' and 'test' sets. We want to fit (i.e. learn our vocabulary) from our training set. Since choosing features is a part of our model building process, we **should not** look at our test set to do this.
+
+Whenever we want to make predictions, we will need to create a new data point that contains **exactly** the same columns as our model. If feature 234 in our model represents the word 'cheeseburger', then we need to make sure our test or future example also has 'cheeseburger' as feature 234. We can use `transform` to perform this conversion on the test set (and any future dataset) in the same way.
+
+```python
+
+titles = data['title'].fillna('')
+
+from sklearn.feature_extraction.text import CountVectorizer
+
+vectorizer = CountVectorizer(max_features = 1000,
+                             ngram_range=(1, 2),
+                             stop_words='english',
+                             binary=True)
+
+- Use `fit` to learn the vocabulary of the titles
+vectorizer.fit(titles)
+
+- Use `tranform` to generate the sample X word matrix - one column per feature (word or n-grams)
+X = vectorizer.transform(titles)
+```
+
+#### Random Forest Prediction Model
+Build a random forest model to predict the "evergreeness" of a website using the title features
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+
+model = RandomForestClassifier(n_estimators = 20)
+
+- Use `fit` to learn the vocabulary of the titles
+vectorizer.fit(titles)
+
+- Use `transform` to generate the sample X word matrix - one column per feature (word or n-grams)
+X = vectorizer.transform(titles)
+y = data['label']
+
+from sklearn.cross_validation import cross_val_score
+
+scores = cross_val_score(model, X, y, scoring='roc_auc')
+print('CV AUC {}, Average AUC {}'.format(scores, scores.mean()))
+```
+
+#### Term Frequency - Inverse Document Frequency (TF-IDF)
+
+An alternative representation of the _bag-of-words_ approach from `CountVectorizer` is a TF-IDF representation. TF-IDF stands for **Term Frequency - Inverse Document Frequency**.
+
+As opposed to using the count of words as features, TF-IDF uses the product of two intermediate values, the _Term Frequency_ and the _Inverse Document Frequency_.
+
+The Term Frequency is equivalent to `CountVectorizer` features, or the number of times (i.e. 'count') that a word appears in the document. This is our most basic representation of text.
+
+To define Inverse Document Frequency, first let's define Document Frequency. **Document Frequency** is the % of documents that a particular word appears in. For example, you could assume `the` appears in 100% of documents, while words like `Syria` would have relatively low document frequency.  
+
+**Inverse Document Frequency** is simply `1 / Document Frequency` (although sometimes this is altered to `log(1 / Document Frequency)`).
+
+Looking at our final term:
+  Term Frequency * Inverse Document Frequency = Term Frequency / Document Frequency.  
+
+The intuition behind a TF-IDF representation is that words that have high weight are those that either appear frequently in this document or appear rarely in other documents (therefore unique to this document).
+
+This is a good alternative to using a static set of stop-words.
+
+```python
+from sklearn.feature_extraction.text import TfidfVectorizer
+vectorizer = TfidfVectorizer()
+```
+
+`TfidfVectorizer` follows the same `fit` and `fit_transform` interface of `CountVectorizer`.
+
+**Check:** What does TF-IDF stand for? What does this function do and why is it useful?
+
+**Check:** Use `TfidfVectorizer` to create a feature representation of the stumbleupon titles.
+
+> Instructor Note: You can find the solutions in the [solution code notebook](./code/solution-code/solution-code-13.ipynb).
 
 ***
 
-## Independent Practice: Evaluate Random Forest Using Cross-Validation (25 minutes)
-> Use the iPython notebooks for [starter](./code/starter-code/starter-code-12.ipynb) and [solution](./code/solution-code/solution-code-12.ipynb) code in this section
+<a name="ind-practice"></a>
+## Independent Practice: Text Classification in scikit-learn (30 mins)
 
-1. Continue adding input variables to the model that you think may be relevant
-2. For each feature:
-  - Evaluate the model for improved predictive performance using cross-validation
-  - Evaluate the _importance_ of the feature
-  -
-3. **Bonus**: Just like the 'recipe' feature, add in similar text features and evaluate their performance.
+Tie together the text features of the title with one more feature sets from the previous random forest model. Train this model to see if this improves the AUC.
+- Use the `body` text instead of the `title` text - is this an improvement?
+- Use `TfIdfVectorizer` instead of `CountVectorizer` - is this an improvement?
 
-**Check:** Each student should improve on their original model (in AUC) either by increasing the size of the model or adding in additional features.
+**Check:** Were you able to prepare a model that uses both quantitative features and text features? Does this model improve the AUC?
 
 ***
 
 <a name="conclusion"></a>
 ## Conclusion (5 mins)
 
-#### Review Q&A
+Let's review:
 
-1. What are decision trees?
-    - Decision trees are non-linear models that can be used for classification or regression.
-
-2. What does training involve?
-    - Training means using the data to decide the best questions to separate the data into our two classes. Predictions are then made by answering those questions.
-
-3. What are some common problems with Decision Trees?
-    - Decision trees are typically weak models and overfit very easily
-
-4. What are Random Forests?
-    - Random forests are collections of decision trees and are much more powerful models
-
-5. What are some common problems with Random Forests?
-    - While they are very good predictive models, they are more often a black-box and lack the explanatory features of linear/logistic regression
+- Natural language processing is the task of pulling meaning and information from text
+- This typically involves solving many subproblems, including: tokenizing, cleaning (stemming and lemmatization) and parsing.
+- After we have structured our text, we can identified features for other tasks, including: classification, summarization, and translation.
+- In `scikit-learn` we use vectorizers to create text features for classification, such as `CountVectorizer` or `TfIdfVectorizer`
 
 ***
 
 ### BEFORE NEXT CLASS
 |   |   |
 |---|---|
-| **UPCOMING PROJECTS**  | [Final Project, Deliverable 2](../../projects/final-projects/02-experiment-writeup/readme.md)  |
+| **UPCOMING PROJECTS**  | [Final Project, Part 2](../../projects/final-projects/02-experiment-writeup/readme.md) |
 
 ### ADDITIONAL RESOURCES
-- Add your own resources.
-- Go crazy.
-- So much room for bullets!
+- [Natural Language Understanding: Foundations and State of the Art](icml.cc/2015/tutorials/icml2015-nlu-tutorial.pdf)
+- [Text Mining Online](http://textminingonline.com/)
