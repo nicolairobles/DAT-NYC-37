@@ -1,5 +1,7 @@
 from __future__ import print_function
 
+import sys
+import twitter
 from TwitterAPI import TwitterAPI
 from pygments import highlight, lexers, formatters
 import json
@@ -15,7 +17,11 @@ _debug = 0
 
 api = TwitterAPI(api_key, api_secret, access_token_key, access_token_secret)
 
-topic = "DemsInPhilly"
+try:
+    topic = sys.argv[1]
+except:
+    print("Please include a topic to listen for (usage: `python capture_tweets.py datascience`)")
+    sys.exit(1)
 
 def prettify_json(json_string):
     formatted_json = json.dumps(json_string, sort_keys=True, indent=4)
@@ -46,8 +52,6 @@ def retrieve_tweets(topic,
             continue
 
 
-import sys
-import twitter
 
 if __name__ == '__main__':
     results = retrieve_tweets(topic=topic)
