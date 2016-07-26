@@ -4,11 +4,11 @@ from TwitterAPI import TwitterAPI
 from pygments import highlight, lexers, formatters
 import json
 
-access_token_key = "118197143-lxLFvzNTbq0YwygedKusXeWQwLCk4KaE8DL0mACl"
-access_token_secret = "cnwvXILlGw0R6o31EKaoJ7s2gQRRJ0cVVh5SYn7dtN43o"
+access_token_key = "<your API token here>"
+access_token_secret = "<your access token here."
 
-api_key = "n7dLWfUSdZeLiXjFf24d8djP7"
-api_secret = "TIBmvnQdtwA1rQ5KXmmfXO4kAKapE6Na5UQR2msShTp90Bca4S"
+api_key = "<your api key here>"
+api_secret = "<your api secret here>"
 
 _debug = 0
 
