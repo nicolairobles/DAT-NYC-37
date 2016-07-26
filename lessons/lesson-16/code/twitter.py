@@ -1,10 +1,10 @@
 from TwitterAPI import TwitterAPI
 
-access_token_key = "<ENTER ACCESS TOKEN KEY>"
-access_token_secret = "<ENTER ACCESS TOKEN SECRET>"
+access_token_key = "118197143-lxLFvzNTbq0YwygedKusXeWQwLCk4KaE8DL0mACl"
+access_token_secret = "cnwvXILlGw0R6o31EKaoJ7s2gQRRJ0cVVh5SYn7dtN43o"
 
-api_key = "<ENTER CONSUMER KEY>"
-api_secret = "<ENTER CONSUMER SECRET>"
+api_key = "n7dLWfUSdZeLiXjFf24d8djP7"
+api_secret = "TIBmvnQdtwA1rQ5KXmmfXO4kAKapE6Na5UQR2msShTp90Bca4S"
 
 _debug = 0
 

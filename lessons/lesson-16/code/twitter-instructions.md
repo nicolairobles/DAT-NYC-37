@@ -1,5 +1,11 @@
 ## Instructions for capturing tweets
 
+### Installing necessary packages
+
+1. tweepy: `pip install tweepy`
+2. TwitterApi: `pip install TwitterApi`
+3. spacy (https://spacy.io/): `pip install spacy` then `python -m spacy.en.download`
+4. gensim (https://radimrehurek.com/gensim/): `pip install gensim`
 
 ### Setting up Twitter API credentials
 
