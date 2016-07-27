@@ -443,11 +443,16 @@ Concept Review:
 ### ADDITIONAL RESOURCES
 - [Five Takeaways on the State of Natural Language Processing](http://www.wise.io/tech/five-takeaways-on-the-state-of-natural-language-processing)
 
+
 #### LDA (Latent Dirichlet Allocation)
 - [Introduction to LDA](http://blog.echen.me/2011/08/22/introduction-to-latent-dirichlet-allocation/)
 - [Gensim LDA documentation](https://radimrehurek.com/gensim/models/lda.html)
+- http://alexperrier.github.io/jekyll/update/2015/09/04/topic-modeling-of-twitter-followers.html
+- http://sujitpal.blogspot.com/2014/08/topic-modeling-with-gensim-over-past.html
+- http://districtdatalabs.silvrback.com/modern-methods-for-sentiment-analysis
 
 #### Word2Vec
+- [Word2Vec Sentiments](https://github.com/linanqiu/word2vec-sentiments)
 - [Gensim Word2Vec documentation](https://radimrehurek.com/gensim/models/word2vec.html)
 - [How Google Converted Language Translation Into a Problem of Vector Space Mathematics](http://www.technologyreview.com/view/519581/how-google-converted-language-translation-into-a-problem-of-vector-space-mathematics/)
 - [A word is worth a thousand vectors](http://multithreaded.stitchfix.com/blog/2015/03/11/word-is-worth-a-thousand-vectors/)
