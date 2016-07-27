@@ -8,7 +8,7 @@ creator:
 
 
 # ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Latent Variables and Natural Language Processing
-DS | Lesson 14
+DS | Lesson 16
 
 ### LEARNING OBJECTIVES
 *After this lesson, you will be able to:*
@@ -437,8 +437,8 @@ Concept Review:
 ### BEFORE NEXT CLASS
 |   |   |
 |---|---|
-| **DUE TODAY**  | [Final Project, Deliverable 2](../../projects/final-projects/02-experiment-writeup/readme.md) |
-| **UPCOMING PROJECTS**  | [Final Project, Deliverable 3](../../projects/final-projects/03-exploratory-analysis/readme.md) |
+| **DUE TODAY**  | Final Project, Deliverable 3
+| **UPCOMING HOMEWORK**  | Unit Project 4
 
 ### ADDITIONAL RESOURCES
 - [Five Takeaways on the State of Natural Language Processing](http://www.wise.io/tech/five-takeaways-on-the-state-of-natural-language-processing)
