@@ -34,10 +34,10 @@ The repository to upload projects can be found here: https://github.com/ga-stude
 | 7 | 7/18 | [Advanced Metrics and Communicating Results](./lessons/lesson-10) | **[Final Project 2 Due](./projects/final-projects/3) due** |
 | 7 | 7/20 | Natural Language Processing and Text Classification | **[Unit Project 3 Due](./projects/unit-projects/2) due** |
 | 8 | 7/25 | Latent Variables and Natural Language Processing | |
-| 8 | 7/27 | Time Series Data | **[Unit Project 4](./unit-projects/4) due** |
-| 9 | 8/1 | Introduction to Databases | **[Final Project 3](./final-project/3) due** |
+| 8 | 7/27 | Scraping data from an API |  |
+| 9 | 8/1 | Flex Sesson |  |
 | 9 | 8/3 | Wrapping Up and Next Steps | |
-| 10 | 8/8 | Final Project Presentations | **[Final Project 5](./final-project/5) due** |
+| 10 | 8/8 | Final Project Presentations | **[Final Project presentation](./final-project/5) ** |
 | 10 | 8/10 | Final Project Presentations, Part 2 | |
 
 *(Syllabus last updated on 6/16/2016)*

@@ -23,12 +23,8 @@ def prettify_json(json_string):
 def retrieve_tweets(topic,
                     url="https://stream.twitter.com/1/statuses/filter.json",
                     method="GET", ):
-    """
-    Params:
-    topic - must be in this format "#topic" or '@handle"
-    Returns
-    """
-    response = api.request('statuses/filter', {'track': topic})
+    # https://dev.twitter.com/streaming/reference/post/statuses/filter
+    calresponse = api.request('statuses/filter', {'track': topic})
 
     if response.status_code != 200:
         raise ValueError("Unable to retrieve tweets, please check your API credentials")
