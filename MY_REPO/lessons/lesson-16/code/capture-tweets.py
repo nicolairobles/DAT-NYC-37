@@ -12,8 +12,7 @@ import json
 
 # A simple function to output Twitter's API JSON in a clean, readable format
 def prettify_json(json_string):
-    formatted_json = json.dumps(json_string['text'], sort_keys=True, indent=4)
-    # formatted_json = json.dumps(json_string, sort_keys=True, indent=4)
+    formatted_json = json.dumps(json_string, sort_keys=True, indent=4)
 
     colorful_json = highlight(unicode(formatted_json, 'UTF-8'), lexers.JsonLexer(), formatters.TerminalFormatter())
     print(colorful_json)
@@ -85,12 +84,9 @@ for result in results:
 
     # Filter to english tweets
     if ('lang' in result and result['lang'] == 'en') or ('user' in result and result['user']['lang'] == 'en'):
-
-        # Filter unretweeted tweets
-        if (result["retweeted"] == "false"):
-            # The tweet is stored with key 'text', we'll write that to our file...
-            out.write((result['text'] + "\n").encode('utf-8'))
-            i += 1
+        # The tweet is stored with key 'text', we'll write that to our file...
+        out.write((result['text'] + "\n").encode('utf-8'))
+        i += 1
 
     # Defaulting to capturing 5000 tweets, this takes a long time...
     if i == 5000:
