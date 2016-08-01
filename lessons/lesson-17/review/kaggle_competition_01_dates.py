@@ -30,7 +30,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.cross_validation import train_test_split, cross_val_score
 
-
+# https://inclass.kaggle.com/c/pycon-2015-tutorial/data
 PATH_TO_DATA = "/Users/ruben/Downloads/"  # change this to your local path
 
 TRAIN_FILE = PATH_TO_DATA + "train.csv"
@@ -178,3 +178,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    

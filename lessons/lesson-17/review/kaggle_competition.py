@@ -32,6 +32,7 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.cross_validation import train_test_split, cross_val_score
 
 
+# You'll need to use this datasource: https://inclass.kaggle.com/c/pycon-2015-tutorial/data
 PATH_TO_DATA = "/Users/ruben/Downloads/"  # change this to your local path
 USER = os.getlogin()  # you could change this to your own name if you like
 

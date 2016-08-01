@@ -19,6 +19,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 
 
+# https://inclass.kaggle.com/c/pycon-2015-tutorial/data
 PATH_TO_DATA = "/Users/ruben/Downloads/"  # change this to your local path
 
 
